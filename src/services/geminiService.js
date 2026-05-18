@@ -50,7 +50,7 @@ export class GeminiService {
         lastError = error;
         console.warn(`Gemini model ${model} failed:`, error);
 
-        if (!this.isTemporaryModelError(error)) {
+        if (!this.isRecoverableModelError(error)) {
           break;
         }
       }
@@ -83,6 +83,19 @@ export class GeminiService {
     );
   }
 
+  isQuotaError(error) {
+    const message = this.stringifyError(error);
+    return (
+      message.includes("429") ||
+      message.includes("RESOURCE_EXHAUSTED") ||
+      message.toLowerCase().includes("quota")
+    );
+  }
+
+  isRecoverableModelError(error) {
+    return this.isTemporaryModelError(error) || this.isQuotaError(error);
+  }
+
   stringifyError(error) {
     if (!error) {
       return "";
@@ -111,9 +124,7 @@ export class GeminiService {
     }
 
     if (
-      message.includes("429") ||
-      message.includes("RESOURCE_EXHAUSTED") ||
-      message.includes("quota")
+      this.isQuotaError(error)
     ) {
       return "Gemini API key đã chạm giới hạn sử dụng. Vui lòng thử lại sau hoặc kiểm tra quota/billing trong Google AI Studio.";
     }
