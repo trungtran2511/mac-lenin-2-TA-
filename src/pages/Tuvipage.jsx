@@ -508,27 +508,36 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
             </button>
           </Link>
           <h1 className="wordmark">Mời bạn Lập lá số tử vi</h1>
-          <div className="formborder">
-            <form id="lstv" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid thongtin">
-                <div className="col col-3 text-white">Họ tên</div>
-                <div className="col col-9">
+          <div className="formborder tuvi-form-panel">
+            <form
+              id="lstv"
+              className="tuvi-lookup-form"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <div className="tuvi-form-topline">
+                <span>Thông tin lá số</span>
+                <strong>Đẩu số tham khảo</strong>
+              </div>
+
+              <div className="tuvi-form-grid">
+                <div className="tuvi-field tuvi-field-wide">
+                  <span className="tuvi-field-label">Họ tên</span>
                   <input
                     type="text"
                     name="hoten"
                     id="hoten"
+                    aria-label="Họ tên"
                     value={formData.hoten}
                     onChange={handleChange}
                   />
                 </div>
-              </div>
 
-              <div className="grid thongtin">
-                <div className="col col-3 text-white">Giới tính</div>
-                <div className="col col-9">
+                <div className="tuvi-field">
+                  <span className="tuvi-field-label">Giới tính</span>
                   <select
                     name="gioitinh"
                     id="gioitinh"
+                    aria-label="Giới tính"
                     value={formData.gioitinh}
                     onChange={handleChange}
                   >
@@ -536,16 +545,14 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                     <option value="nu">Nữ</option>
                   </select>
                 </div>
-              </div>
 
-              <div className="grid thongtin">
-                <div className="col col-3 text-white">Ngày tháng năm sinh</div>
-                <div className="col col-9">
-                  <div className="grid thongtinngaysinh">
+                <div className="tuvi-field tuvi-field-date">
+                  <span className="tuvi-field-label">Ngày tháng năm sinh</span>
+                  <div className="tuvi-date-grid">
                     <select
-                      className="col col-4"
                       name="ngaysinh"
                       id="ngaysinh"
+                      aria-label="Ngày sinh"
                       value={formData.ngaysinh}
                       onChange={handleChange}
                     >
@@ -556,9 +563,9 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                       ))}
                     </select>
                     <select
-                      className="col col-4"
                       name="thangsinh"
                       id="thangsinh"
+                      aria-label="Tháng sinh"
                       value={formData.thangsinh}
                       onChange={handleChange}
                     >
@@ -569,9 +576,9 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                       ))}
                     </select>
                     <select
-                      className="col col-4"
                       name="namsinh"
                       id="namsinh"
+                      aria-label="Năm sinh"
                       value={formData.namsinh}
                       onChange={handleChange}
                     >
@@ -586,27 +593,24 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                     </select>
                   </div>
                 </div>
-              </div>
 
-              <div className="grid thongtin">
-                <div className="col col-3 text-white"></div>
-                <div className="col col-4 text-white">
-                  Âm lịch?
+                <div className="tuvi-field tuvi-check-field">
                   <input
                     type="checkbox"
                     name="amlich"
+                    aria-label="Âm lịch"
                     checked={formData.amlich}
                     onChange={handleChange}
                   />
+                  <span>Âm lịch</span>
                 </div>
-              </div>
 
-              <div className="grid thongtin">
-                <div className="col col-3 text-white">Giờ sinh</div>
-                <div className="col col-3">
+                <div className="tuvi-field">
+                  <span className="tuvi-field-label">Giờ sinh</span>
                   <select
                     name="giosinh"
                     id="giosinh"
+                    aria-label="Giờ sinh"
                     value={formData.giosinh}
                     onChange={handleChange}
                   >
@@ -624,11 +628,13 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                     <option value="12">Hợi (21g - 23g)</option>
                   </select>
                 </div>
-                <div className="col col-3 text-white">Múi giờ:</div>
-                <div className="col col-3 text-white">
+
+                <div className="tuvi-field">
+                  <span className="tuvi-field-label">Múi giờ</span>
                   <select
                     name="muigio"
                     id="muigio"
+                    aria-label="Múi giờ"
                     value={formData.muigio}
                     onChange={handleChange}
                   >
@@ -660,7 +666,7 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                 </div>
               </div>
 
-              <div className="grid">
+              <div className="tuvi-submit-row">
                 <input
                   type="button"
                   className="button primary"
@@ -674,10 +680,10 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
         </div>
       </div>
       {laSo && (
-        <div className="container my-5">
-          <div className="card shadow-lg rounded-4">
+        <div className="container my-5 tuvi-result-container">
+          <div className="card shadow-lg rounded-4 tuvi-chart-card">
             <div
-              className="card-body p-5 rounded-4"
+              className="card-body p-5 rounded-4 tuvi-chart-body"
               style={{
                 boxShadow: `
                   0 0 10px rgba(255,255,255,.6),

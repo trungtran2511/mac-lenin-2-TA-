@@ -1033,6 +1033,168 @@
   box-shadow: 0 18px 34px rgba(242, 180, 65, 0.22);
 }
 
+.tuvi-container-wrapper .tuvi-form-panel {
+  position: relative;
+  max-width: 1080px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(247, 248, 243, 0.22);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(247, 248, 243, 0.96), rgba(228, 241, 239, 0.92)),
+    radial-gradient(circle at 10% 0%, rgba(242, 180, 65, 0.28), transparent 34%);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+  text-align: left;
+}
+
+.tuvi-container-wrapper .tuvi-form-panel::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(242, 180, 65, 0.4), transparent 24%, transparent 76%, rgba(0, 125, 132, 0.25)),
+    linear-gradient(135deg, transparent 0 48%, rgba(0, 125, 132, 0.08) 48% 52%, transparent 52% 100%);
+  opacity: 0.55;
+}
+
+.tuvi-container-wrapper .tuvi-lookup-form {
+  position: relative;
+  z-index: 1;
+  padding: 22px;
+}
+
+.tuvi-container-wrapper .tuvi-form-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 18px;
+  padding: 0 2px;
+  color: #172026;
+}
+
+.tuvi-container-wrapper .tuvi-form-topline span {
+  color: #007d84;
+  font-size: 0.85rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.tuvi-container-wrapper .tuvi-form-topline strong {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(242, 180, 65, 0.22);
+  color: #4a3711;
+  font-size: 0.85rem;
+}
+
+.tuvi-container-wrapper .tuvi-form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(190px, 0.7fr);
+  gap: 16px;
+}
+
+.tuvi-container-wrapper .tuvi-field {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(23, 32, 38, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 30px rgba(23, 32, 38, 0.07);
+}
+
+.tuvi-container-wrapper .tuvi-field-wide,
+.tuvi-container-wrapper .tuvi-field-date {
+  grid-column: span 1;
+}
+
+.tuvi-container-wrapper .tuvi-field-label,
+.tuvi-container-wrapper .tuvi-field > span {
+  display: block;
+  padding: 0;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #2b3439;
+  font-size: 0.86rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.tuvi-container-wrapper .tuvi-field input,
+.tuvi-container-wrapper .tuvi-field select {
+  min-height: 48px;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(0, 125, 132, 0.18);
+  border-radius: 12px;
+  background: #f7f8f3;
+  color: #172026;
+  font-size: 0.98rem;
+  font-weight: 650;
+  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.tuvi-container-wrapper .tuvi-field input:focus,
+.tuvi-container-wrapper .tuvi-field select:focus {
+  border-color: #007d84;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 125, 132, 0.12);
+}
+
+.tuvi-container-wrapper .tuvi-date-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tuvi-container-wrapper .tuvi-check-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 100%;
+  cursor: pointer;
+}
+
+.tuvi-container-wrapper .tuvi-check-field input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  margin: 0;
+  accent-color: #007d84;
+}
+
+.tuvi-container-wrapper .tuvi-submit-row {
+  margin-top: 18px;
+}
+
+.tuvi-container-wrapper .tuvi-submit-row .button.primary {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f2b441, #ffd166);
+  color: #172026;
+  font-size: 1rem;
+  letter-spacing: 0;
+  box-shadow: 0 18px 34px rgba(242, 180, 65, 0.3);
+}
+
+.tuvi-container-wrapper .tuvi-submit-row .button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 40px rgba(242, 180, 65, 0.36);
+}
+
 .tuvi-container-wrapper .back-home {
   position: fixed;
   z-index: 5;
@@ -1263,5 +1425,130 @@
   .tuvi-reading-empty,
   .tuvi-reading-loading {
     padding: 1.25rem;
+  }
+}
+
+/* Keep the generated chart centered on phones. */
+@media screen and (max-width: 768px) {
+  .tuvi-container-wrapper .tuvi-result-container {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    padding-right: 12px;
+    padding-left: 12px;
+    overflow: hidden;
+  }
+
+  .tuvi-container-wrapper .tuvi-chart-card {
+    overflow: hidden;
+    border: 0;
+    border-radius: 18px !important;
+    background: #f7f8f3;
+  }
+
+  .tuvi-container-wrapper .tuvi-chart-body {
+    --tuvi-chart-scale: 0.55;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: 680px;
+    padding: 10px !important;
+    overflow: hidden;
+  }
+
+  .tuvi-container-wrapper .tuvi-chart-body .anlaso.laso {
+    width: 1180px !important;
+    min-width: 1180px;
+    max-width: none !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: hidden;
+    display: block !important;
+    transform: scale(var(--tuvi-chart-scale)) !important;
+    transform-origin: top center !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tuvi-container-wrapper .tuvi-form-panel {
+    border-radius: 20px;
+  }
+
+  .tuvi-container-wrapper .tuvi-lookup-form {
+    padding: 16px;
+  }
+
+  .tuvi-container-wrapper .tuvi-form-topline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .tuvi-container-wrapper .tuvi-form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tuvi-container-wrapper .tuvi-field {
+    padding: 0.85rem;
+    border-radius: 15px;
+  }
+
+  .tuvi-container-wrapper .tuvi-date-grid {
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .tuvi-container-wrapper .tuvi-date-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@supports (zoom: 1) {
+  @media screen and (max-width: 768px) {
+    .tuvi-container-wrapper .tuvi-chart-body {
+      height: auto;
+    }
+
+    .tuvi-container-wrapper .tuvi-chart-body .anlaso.laso {
+      transform: none !important;
+      zoom: var(--tuvi-chart-scale);
+    }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .tuvi-container-wrapper .tuvi-chart-body {
+    --tuvi-chart-scale: 0.43;
+    height: 540px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .tuvi-container-wrapper .tuvi-result-container {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .tuvi-container-wrapper .tuvi-chart-body {
+    --tuvi-chart-scale: 0.33;
+    height: 430px;
+    padding: 8px !important;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .tuvi-container-wrapper .tuvi-chart-body {
+    --tuvi-chart-scale: 0.3;
+    height: 395px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .tuvi-container-wrapper .tuvi-chart-body {
+    --tuvi-chart-scale: 0.28;
+    height: 370px;
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import logoDark2 from "../../assets/images/logo/logo-dark2.svg";
+import logoStudyMark from "../../assets/images/logo/logo-study-mark.svg";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,17 +75,17 @@ const Header = () => {
                               <a
                                 href="/"
                                 className="brand-link"
-                                aria-label="GROUP 2 - Triết học và đời sống"
+                                aria-label="Nhóm 2 - Học triết dễ hơn"
                               >
                                 <img
                                   className="brand-icon is_svg"
-                                  src={logoDark2}
+                                  src={logoStudyMark}
                                   alt=""
                                   aria-hidden="true"
                                 />
                                 <span className="brand-text">
-                                  <strong>GROUP 2</strong>
-                                  <small>Triết học &amp; Đời sống</small>
+                                  <strong>NHÓM 2</strong>
+                                  <small>Học triết dễ hơn</small>
                                 </span>
                               </a>
                             </div>

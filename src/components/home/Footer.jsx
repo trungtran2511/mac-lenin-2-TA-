@@ -50,7 +50,7 @@ const Footer = () => {
                           className="heading heading-none upper0 fwglobal lhglobal pbtsize-1"
                         >
                           <span className="headingtext fwglobal nline0">
-                            Group2-AI1901 - Triết học và Đời sống
+                            Không gian học tập nhóm 2
                           </span>
                         </h4>
 
@@ -66,10 +66,10 @@ const Footer = () => {
                           }}
                         >
                           {[
-                            "Tài liệu học tập đầy đủ",
-                            "Đề thi và bài tập thực hành",
-                            "Thẻ ghi nhớ khái niệm",
-                            "Sơ đồ tư duy chi tiết",
+                            "Bài học chia theo chủ đề",
+                            "Câu hỏi ôn tập có giải thích",
+                            "Thẻ nhớ và trò chơi nhanh",
+                            "Tài liệu gọn để xem lại",
                           ].map((item, idx) => (
                             <li key={idx}>
                               <a className="llink" href="#">
@@ -101,10 +101,10 @@ const Footer = () => {
                           }}
                         >
                           {[
-                            "Cập nhật liên tục",
-                            "Phân tích chuyên sâu",
-                            "Trò chơi thú vị",
-                            "Tử vi vận hạn",
+                            "Học theo từng mục nhỏ",
+                            "Ôn trước khi kiểm tra",
+                            "Chơi để nhớ lâu hơn",
+                            "Góc lá số vui",
                           ].map((item, idx) => (
                             <li key={idx}>
                               <a className="llink" href="#">
@@ -141,8 +141,7 @@ const Footer = () => {
                           className="heading heading-none upper0 fwglobal lhglobal pbtsize-1"
                         >
                           <span className="headingtext fwglobal nline0">
-                            Hãy đặt câu hỏi cho đội ngũ Group2-AI1901
-                            nhé!
+                            Cần góp ý nội dung? Gửi cho nhóm mình nhé.
                           </span>
                         </h4>
 
@@ -204,7 +203,7 @@ const Footer = () => {
                           className="heading heading-none upper0 fwglobal lhglobal pbtsize-1"
                         >
                           <span className="headingtext fwglobal nline0">
-                            Tham gia cùng Group2-AI1901 nhé!
+                            Theo dõi nhóm tại đây
                           </span>
                         </h4>
 
@@ -290,7 +289,7 @@ const Footer = () => {
                         >
                           <span className="before">© 2026</span>
                           <span className="after">
-                            Group2-AI1901 - Triết học và đời sống. All rights reserved.
+                            Nhóm 2 - Website học tập Triết học Mác - Lênin.
                           </span>
                         </div>
                       </div>
@@ -314,7 +313,7 @@ const Footer = () => {
                             fontSize: "1rem",
                           }}
                         >
-                          {["About", "Courses", "Support"].map((item, idx) => (
+                          {["Giới thiệu", "Bài học", "Liên hệ"].map((item, idx) => (
                             <li key={idx}>
                               <a className="llink" href="#">
                                 {item}

@@ -8234,8 +8234,8 @@ body:has(.group2-home) {
   width: 48px;
   height: 48px;
   max-height: 48px;
-  object-fit: cover;
-  object-position: left center;
+  object-fit: contain;
+  object-position: center;
   flex-shrink: 0;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
 }

@@ -68,7 +68,7 @@ const MainContent = () => {
                         tabIndex="-1"
                       >
                         <span className="course-backtext">Course</span>
-                        Triết học Mác - Lênin
+                        Không gian học tập nhóm 2
                       </a>
                     </h1>
                   </div>
@@ -90,17 +90,17 @@ const MainContent = () => {
                       <ol className="breadcrumb">
                         <li className="breadcrumb-item">
                           <a href="/">
-                            Home
+                            Trang chủ
                           </a>
                         </li>
                         <li className="breadcrumb-item">
                           <a href="/courses">
-                            Courses
+                            Bài học
                           </a>
                         </li>
                         <li className="breadcrumb-item">
                           <a href="/quiz">
-                            Luyện tập
+                            Ôn tập
                           </a>
                         </li>
                         <li className="breadcrumb-item">
@@ -109,7 +109,7 @@ const MainContent = () => {
                             aria-current="page"
                             title="Triết học Mác - Lênin"
                           >
-                            Triết học Mác - Lênin
+                            Bản đồ kiến thức
                           </a>
                         </li>
                       </ol>
@@ -151,7 +151,7 @@ const MainContent = () => {
 
                     {/* Page Context Header */}
                     <div className="page-context-header m-0 p-0">
-                      <h2 className="activity-name">Triết học Mác - Lênin</h2>
+                      <h2 className="activity-name">Bản đồ học tập</h2>
                     </div>
 
                     {/* Activity Header */}
@@ -163,7 +163,7 @@ const MainContent = () => {
                         <span className="sr-only">Completion requirements</span>
                         <div
                           data-region="activity-information"
-                          data-activityname="Triết học Mác - Lênin"
+                          data-activityname="Bản đồ học tập"
                           className="activity-information"
                         ></div>
                       </div>
@@ -418,9 +418,9 @@ const MainContent = () => {
                                           className="headingtext fwglobal nline0"
                                           style={{ color: "#00B4D8" }}
                                         >
-                                          “Triết học dạy ta đặt câu hỏi cho mọi
-                                          thứ, kể cả lý do vì sao mình lại chọn
-                                          học triết.” - Karl Marx
+                                          Không học thuộc lòng khô cứng; hãy nối
+                                          mỗi phạm trù với một vấn đề thật mà bạn
+                                          đang thấy quanh mình.
                                         </span>
                                       </h4>
                                       <div
@@ -492,7 +492,7 @@ const MainContent = () => {
                                                 fontSize: "1rem",
                                               }}
                                             >
-                                              <p>Bạn đã sẵn sàng chưa?</p>
+                                              <p>Vào học thôi</p>
                                             </div>
                                           </div>
                                         </div>
@@ -519,7 +519,7 @@ const MainContent = () => {
                                             className="headingtext fwglobal nline0"
                                             style={{ color: "#00B4D8" }}
                                           >
-                                            Học thông qua các trò chơi thú vị
+                                            Chọn cách học hợp với bạn
                                           </span>
                                         </h4>
                                         <div
@@ -544,13 +544,11 @@ const MainContent = () => {
                                               }}
                                             >
                                               <p>
-                                                Phương pháp học tập hiện đại Kết
-                                                hợp lý thuyết với thực tiễn,
-                                                giúp người học vận dụng các
-                                                nguyên lý triết học Mác - Lênin
-                                                vào phân tích các vấn đề thực tế
-                                                của xã hội Việt Nam và thế giới
-                                                đương đại.
+                                                Mỗi phần được thiết kế để học
+                                                nhanh hơn: đọc ý chính, tự làm
+                                                câu hỏi, lật thẻ ghi nhớ và xem
+                                                lại phần còn yếu trước khi vào
+                                                bài tiếp theo.
                                               </p>
                                             </div>
                                           </div>
@@ -598,17 +596,14 @@ const MainContent = () => {
                                                           }}
                                                         >
                                                           <span className="box-title-text">
-                                                            Multiple choice
-                                                            Practice
+                                                            Quiz nhanh
                                                           </span>
                                                         </h4>
                                                         <div className="box-desc">
-                                                          Hệ thống Luyện tập với
-                                                          các câu hỏi trắc
-                                                          nghiệm đa dạng, từ cơ
-                                                          bản đến nâng cao, giúp
-                                                          củng cố kiến thức
-                                                          triết học.
+                                                          Trả lời từng câu ngắn,
+                                                          xem giải thích ngay và
+                                                          biết mình đang vướng ở
+                                                          chủ đề nào.
                                                         </div>
                                                         <span className="theme-boximg-color" />
                                                         <div className="box-readmore">
@@ -622,7 +617,7 @@ const MainContent = () => {
                                                                 "rgb(0, 167, 203)",
                                                             }}
                                                           >
-                                                            Go to Quiz
+                                                            Làm quiz
                                                           </Link>
                                                         </div>
                                                       </div>
@@ -682,16 +677,14 @@ const MainContent = () => {
                                                           }}
                                                         >
                                                           <span className="box-title-text">
-                                                            Flip Card Game
+                                                            Memory Lab
                                                           </span>
                                                         </h4>
                                                         <div className="box-desc">
-                                                          Flashcard ôn tập Thẻ
-                                                          học tập thông minh với
-                                                          các khái niệm, định
-                                                          nghĩa và nguyên lý
-                                                          quan trọng, giúp ghi
-                                                          nhớ hiệu quả.
+                                                          Lật cặp hình, ghép ý
+                                                          tương ứng và luyện ghi
+                                                          nhớ khái niệm bằng nhịp
+                                                          chơi nhanh.
                                                         </div>
                                                         <span className="theme-boximg-color" />
                                                         <div className="box-readmore">
@@ -705,7 +698,7 @@ const MainContent = () => {
                                                                 "rgb(41, 25, 165)",
                                                             }}
                                                           >
-                                                            Play Flip card
+                                                            Chơi ngay
                                                           </Link>
                                                         </div>
                                                       </div>
@@ -769,15 +762,15 @@ const MainContent = () => {
                                                           }}
                                                         >
                                                           <span className="box-title-text">
-                                                            Bói Tử Vi vui
+                                                            Lá số vui cùng AI
                                                           </span>
                                                         </h4>
                                                         <div className="box-desc">
-                                                          "Trong sự vận động
-                                                          biện chứng của vũ trụ,
-                                                          vận mệnh cá nhân là sự
-                                                          thống nhất giữa tất
-                                                          nhiên và ngẫu nhiên."
+                                                          Một góc giải trí nhẹ:
+                                                          lập lá số, đọc luận
+                                                          giải tham khảo và xem
+                                                          AI diễn đạt theo cách
+                                                          dễ hiểu.
                                                         </div>
                                                         <span className="theme-boximg-color" />
                                                         <div className="box-readmore">
@@ -795,7 +788,7 @@ const MainContent = () => {
                                                                 "rgb(                                                                    36,                                                                    32,                                                                    39                                                                  )",
                                                             }}
                                                           >
-                                                            Xem Tử Vi
+                                                            Thử lá số
                                                           </Link>
                                                         </div>
                                                       </div>
@@ -884,8 +877,8 @@ const MainContent = () => {
                                                 }}
                                               >
                                                 <span className="title-text">
-                                                  Kho tài liệu phong phú giúp
-                                                  bạn học hiệu quả hơn
+                                                  Bản đồ kiến thức gọn để ôn
+                                                  trước giờ kiểm tra
                                                 </span>
                                               </h4>
                                             </div>
@@ -897,15 +890,11 @@ const MainContent = () => {
                                               }}
                                             >
                                               <p>
-                                                Tổng hợp đầy đủ giáo trình, bài
-                                                giảng và tài liệu tham khảo về
-                                                triết học Mác - Lênin. Nội dung
-                                                được trình bày rõ ràng, dễ hiểu
-                                                với nhiều ví dụ thực tế. Bạn có
-                                                thể tải về và học mọi lúc mọi
-                                                nơi, thuận tiện cho việc ôn tập
-                                                và nghiên cứu sâu các vấn đề
-                                                triết học.
+                                                Nội dung được chia thành từng
+                                                mục nhỏ, có ý chính, ví dụ và
+                                                câu hỏi kiểm tra để bạn tự ôn
+                                                mà không phải lướt qua quá nhiều
+                                                đoạn dài.
                                               </p>
                                               <img
                                                 alt="demo_certificates.png"
@@ -932,7 +921,7 @@ const MainContent = () => {
                                                     "rgb(                                                        41,                                                        25,                                                        165                                                      )",
                                                 }}
                                               >
-                                                Vào xem thử
+                                                Mở tài liệu
                                               </Link>
                                             </div>
                                           </div>
@@ -950,7 +939,7 @@ const MainContent = () => {
 
                     {/* Page Date */}
                     <span className="mb2-pb-pagedate sr-only">
-                      Group2-AI1901 - Triết học và đời sống
+                      Không gian học tập nhóm 2
                     </span>
 
                     {/* Course Navigation */}
