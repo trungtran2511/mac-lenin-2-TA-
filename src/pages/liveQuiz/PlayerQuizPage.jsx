@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   getLivePlayer,
@@ -35,6 +35,12 @@ function PlayerQuizPage() {
   const [extraSeconds, setExtraSeconds] = useState(0);
   const [hiddenOptions, setHiddenOptions] = useState([]);
 
+  // Buff notification state
+  const [buffNotification, setBuffNotification] = useState(null);
+  const [showBuffNotify, setShowBuffNotify] = useState(false);
+  const buffNotifyTimer = useRef(null);
+  const prevIndexRef = useRef(null);
+
   const playerToken = getStoredToken(LIVE_QUIZ_PLAYER_KEY, normalizedRoomCode);
   const leaderboard = useMemo(() => calculateLeaderboard(players), [players]);
   const orderedQuestions = useMemo(() => {
@@ -47,6 +53,106 @@ function PlayerQuizPage() {
   const hasAnsweredCurrent = selectedAnswer !== undefined;
   const isCurrentCorrect =
     hasAnsweredCurrent && selectedAnswer === currentQuestion?.correctAnswer;
+
+  // retry_wrong: chỉ cho phép retry tại câu hiện tại nếu buff active + đã trả lời sai
+  const activeBuff = player?.active_buff;
+  const canRetryCurrentQuestion =
+    activeBuff?.id === "retry_wrong" &&
+    activeBuff?.used &&
+    activeBuff?.appliedQuestionIndex === currentIndex &&
+    hasAnsweredCurrent &&
+    !isCurrentCorrect;
+
+  const markBuffUsed = (buff, extra = {}) => {
+    if (!buff) return buff;
+    return { ...buff, ...extra, used: true, usedAt: new Date().toISOString() };
+  };
+
+  const syncUsedBuff = (buffs = [], usedBuff) => {
+    if (!usedBuff) return buffs;
+    return buffs.map((buff) =>
+      buff.receivedAt === usedBuff.receivedAt && buff.id === usedBuff.id
+        ? usedBuff
+        : buff,
+    );
+  };
+
+  const calculateStats = (updatedAnswers, usedBuffs, pendingDoubleQuestionId) => {
+    const doubledQuestionIds = new Set(
+      usedBuffs
+        .filter((buff) => buff.id === "double_score" && buff.appliedQuestionId)
+        .map((buff) => buff.appliedQuestionId),
+    );
+    if (pendingDoubleQuestionId) doubledQuestionIds.add(pendingDoubleQuestionId);
+
+    return orderedQuestions.reduce(
+      (stats, question) => {
+        const selected = updatedAnswers[question.id];
+        if (selected === undefined) return stats;
+        if (selected === question.correctAnswer) {
+          return {
+            score: stats.score + (doubledQuestionIds.has(question.id) ? 200 : 100),
+            correctCount: stats.correctCount + 1,
+          };
+        }
+        return stats;
+      },
+      { score: 0, correctCount: 0 },
+    );
+  };
+
+  // --- Show buff notification toast ---
+  const showBuffToast = useCallback((buff) => {
+    if (!buff) return;
+    // Clear old timer
+    if (buffNotifyTimer.current) clearTimeout(buffNotifyTimer.current);
+    setBuffNotification(buff);
+    setShowBuffNotify(true);
+    buffNotifyTimer.current = setTimeout(() => {
+      setShowBuffNotify(false);
+    }, 3500);
+  }, []);
+
+  // --- Roll buff khi chuyển câu hỏi ---
+  useEffect(() => {
+    if (!room || room.status !== "playing" || !player || player.status === "submitted") return;
+    if (prevIndexRef.current === currentIndex) return;
+    prevIndexRef.current = currentIndex;
+
+    // Expire buff cũ nếu chưa dùng (chuyển câu = buff hết hiệu lực)
+    const currentBuff = player.active_buff;
+    const shouldExpire = currentBuff && !currentBuff.used && currentBuff.questionIndex !== currentIndex;
+
+    // Roll buff mới cho câu hiện tại
+    const expiredBuff = shouldExpire ? { ...currentBuff, used: true, expired: true } : currentBuff;
+    const receivedBuffCount = (player.buffs || []).filter((b) => !b.expired).length;
+    const newBuff = maybeCreateBuff(room.buffs_enabled, expiredBuff, currentIndex, receivedBuffCount);
+
+    if (newBuff) {
+      showBuffToast(newBuff);
+      const updatedBuffs = [...(player.buffs || [])];
+      if (shouldExpire) {
+        // Sync expired buff
+        const idx = updatedBuffs.findIndex(
+          (b) => b.receivedAt === currentBuff.receivedAt && b.id === currentBuff.id,
+        );
+        if (idx >= 0) updatedBuffs[idx] = expiredBuff;
+      }
+      updatedBuffs.push(newBuff);
+
+      updateLivePlayer(player.id, {
+        active_buff: newBuff,
+        buffs: updatedBuffs,
+      }).then(setPlayer).catch(console.warn);
+    } else if (shouldExpire) {
+      const updatedBuffs = syncUsedBuff(player.buffs || [], expiredBuff);
+      updateLivePlayer(player.id, {
+        active_buff: expiredBuff,
+        buffs: updatedBuffs,
+      }).then(setPlayer).catch(console.warn);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, room?.status, room?.buffs_enabled]);
 
   useEffect(() => {
     let isMounted = true;
@@ -184,52 +290,64 @@ function PlayerQuizPage() {
 
   const handleAnswer = async (answerIndex) => {
     if (!player || !currentQuestion || player.status === "submitted") return;
+    if (hasAnsweredCurrent && !canRetryCurrentQuestion) return;
 
     const updatedAnswers = {
       ...answers,
       [currentQuestion.id]: answerIndex,
     };
 
-    let score = 0;
-    let correctCount = 0;
-    orderedQuestions.forEach((question) => {
-      const selected = updatedAnswers[question.id];
-      if (selected === undefined) return;
-      if (selected === question.correctAnswer) {
-        const doubleActive =
-          player.active_buff?.id === "double_score" &&
-          !player.active_buff?.used &&
-          question.id === currentQuestion.id;
-        score += doubleActive ? 2 : 1;
-        correctCount += 1;
-      }
-    });
+    // Apply double_score buff nếu active cho câu hiện tại
+    const shouldUseDouble =
+      activeBuff?.id === "double_score" &&
+      !activeBuff?.used &&
+      activeBuff?.questionIndex === currentIndex;
 
-    const nextBuff = maybeCreateBuff(room.buffs_enabled, player.active_buff);
-    const usedBuff =
-      player.active_buff?.id === "double_score"
-        ? { ...player.active_buff, used: true }
-        : player.active_buff;
+    // Kết thúc retry nếu đang retry câu này
+    const shouldFinishRetry =
+      activeBuff?.id === "retry_wrong" &&
+      activeBuff?.used &&
+      activeBuff?.appliedQuestionIndex === currentIndex;
+
+    const usedBuff = shouldUseDouble
+      ? markBuffUsed(activeBuff, { appliedQuestionId: currentQuestion.id })
+      : shouldFinishRetry
+        ? markBuffUsed(activeBuff, { completedRetry: true })
+        : activeBuff;
+    const syncedBuffs = syncUsedBuff(player.buffs || [], usedBuff);
+    const { score, correctCount } = calculateStats(
+      updatedAnswers,
+      syncedBuffs,
+      shouldUseDouble ? currentQuestion.id : null,
+    );
+
+    const answeredCount = Object.keys(updatedAnswers).length;
+    const isFinished = answeredCount >= orderedQuestions.length;
 
     const updatedPlayer = await updateLivePlayer(player.id, {
       answers: updatedAnswers,
       score,
       correct_count: correctCount,
-      answered_count: Object.keys(updatedAnswers).length,
-      active_buff: nextBuff || usedBuff,
-      buffs: nextBuff ? [...(player.buffs || []), nextBuff] : player.buffs || [],
-      status: "playing",
+      answered_count: answeredCount,
+      active_buff: usedBuff,
+      buffs: syncedBuffs,
+      status: isFinished ? "submitted" : "playing",
+      submitted_at: isFinished ? new Date().toISOString() : player.submitted_at,
     });
 
     setPlayer(updatedPlayer);
   };
 
   const useBuff = async () => {
-    if (!player?.active_buff || !currentQuestion) return;
-    const buff = player.active_buff;
+    if (!activeBuff || activeBuff.used || !currentQuestion) return;
+    const buff = activeBuff;
 
     if (buff.id === "time_plus") {
-      setExtraSeconds((seconds) => seconds + 10);
+      setExtraSeconds((seconds) => seconds + 15);
+    }
+
+    if (buff.id === "skip_pressure") {
+      setExtraSeconds((seconds) => seconds + 20);
     }
 
     if (buff.id === "fifty_fifty") {
@@ -246,15 +364,44 @@ function PlayerQuizPage() {
         .filter((item) => answers[item.question.id] === undefined);
       if (unanswered.length) {
         const jump = unanswered[Math.floor(Math.random() * unanswered.length)];
+        setHiddenOptions([]);
         setExtraSeconds(0);
         setQuestionStartedAt(Date.now());
         setNowTick(Date.now());
+        // Mark used BEFORE jumping so the new question can roll a new buff
+        const usedB = markBuffUsed(buff);
+        const updatedPlayer = await updateLivePlayer(player.id, {
+          active_buff: usedB,
+          buffs: syncUsedBuff(player.buffs || [], usedB),
+        });
+        setPlayer(updatedPlayer);
+        prevIndexRef.current = null; // Allow buff roll on new question
         setCurrentIndex(jump.index);
+        return;
       }
     }
 
+    if (buff.id === "retry_wrong") {
+      // Chỉ gắn cho câu hiện tại - nếu sai sẽ cho phép chọn lại
+      const usedB = markBuffUsed(buff, { appliedQuestionIndex: currentIndex });
+      const updatedPlayer = await updateLivePlayer(player.id, {
+        active_buff: usedB,
+        buffs: syncUsedBuff(player.buffs || [], usedB),
+      });
+      setPlayer(updatedPlayer);
+      return;
+    }
+
+    if (buff.id === "double_score") {
+      // Không mark used ngay - sẽ được apply khi trả lời đúng trong handleAnswer
+      return;
+    }
+
+    // Cho các buff khác (time_plus, skip_pressure, fifty_fifty) - mark used ngay
+    const usedBuff = markBuffUsed(buff);
     const updatedPlayer = await updateLivePlayer(player.id, {
-      active_buff: { ...buff, used: true },
+      active_buff: usedBuff,
+      buffs: syncUsedBuff(player.buffs || [], usedBuff),
     });
     setPlayer(updatedPlayer);
   };
@@ -264,6 +411,28 @@ function PlayerQuizPage() {
     const secs = seconds % 60;
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
+
+  // --- Buff active display logic ---
+  const isBuffActiveForCurrentQuestion =
+    activeBuff &&
+    !activeBuff.used &&
+    !activeBuff.expired &&
+    activeBuff.questionIndex === currentIndex;
+
+  // Special: retry_wrong shows as active even after used (waiting for retry answer)
+  const isRetryWaiting =
+    activeBuff?.id === "retry_wrong" &&
+    activeBuff?.used &&
+    !activeBuff?.completedRetry &&
+    activeBuff?.appliedQuestionIndex === currentIndex;
+
+  // Special: double_score shows as active (auto-applies on answer)
+  const isDoubleActive =
+    activeBuff?.id === "double_score" &&
+    !activeBuff?.used &&
+    activeBuff?.questionIndex === currentIndex;
+
+  const showBuffButton = isBuffActiveForCurrentQuestion || isRetryWaiting;
 
   if (error) {
     return (
@@ -379,14 +548,59 @@ function PlayerQuizPage() {
           <div className="live-timer">{formatTime(remainingSeconds)}</div>
         </section>
 
-        {player.active_buff && !player.active_buff.used && (
-          <button type="button" className="live-buff-toast" onClick={useBuff}>
-            <i className={`bi ${player.active_buff.icon}`}></i>
+        {/* === BUFF NOTIFICATION TOAST === */}
+        {buffNotification && showBuffNotify && (
+          <div className="live-buff-notification">
+            <div className="live-buff-notification-icon">
+              <i className={`bi ${buffNotification.icon}`}></i>
+            </div>
+            <div className="live-buff-notification-content">
+              <strong>🎁 Bạn nhận được Buff!</strong>
+              <span>
+                <strong>{buffNotification.name}</strong> — {buffNotification.description}
+              </span>
+              <small className="live-buff-warning">
+                ⚠️ Buff chỉ có hiệu lực ở câu hiện tại. Chuyển câu sẽ mất buff!
+              </small>
+            </div>
+          </div>
+        )}
+
+        {/* === BUFF ACTIVE BUTTON === */}
+        {showBuffButton && (
+          <button
+            type="button"
+            className={`live-buff-toast ${isRetryWaiting ? "retry-waiting" : ""}`}
+            onClick={isRetryWaiting ? undefined : useBuff}
+            disabled={isRetryWaiting}
+          >
+            <i className={`bi ${activeBuff.icon}`}></i>
             <span>
-              <strong>{player.active_buff.name}</strong>
-              {player.active_buff.description}
+              <strong>{activeBuff.name}</strong>
+              {isRetryWaiting
+                ? "Chọn lại đáp án cho câu này!"
+                : activeBuff.description}
+              {!isRetryWaiting && (
+                <small className="live-buff-warning">
+                  Chỉ dùng được ở câu này!
+                </small>
+              )}
             </span>
+            {!isRetryWaiting && (
+              <span className="live-buff-use-label">Dùng ngay</span>
+            )}
           </button>
+        )}
+
+        {/* Double score indicator (auto-apply, no click needed) */}
+        {isDoubleActive && (
+          <div className="live-buff-indicator double-score">
+            <i className="bi bi-stars"></i>
+            <span>
+              x2 điểm sẽ tự động áp dụng khi bạn trả lời đúng câu này!
+              <small className="live-buff-warning">Chỉ áp dụng cho câu hiện tại.</small>
+            </span>
+          </div>
         )}
 
         <section className="live-panel live-question-panel">
@@ -397,7 +611,7 @@ function PlayerQuizPage() {
             <strong>{player.score || 0} điểm</strong>
           </div>
           <h2>{currentQuestion?.question}</h2>
-          {hasAnsweredCurrent && (
+          {hasAnsweredCurrent && !canRetryCurrentQuestion && (
             <div
               className={`live-answer-feedback ${
                 isCurrentCorrect ? "correct" : "wrong"
@@ -417,6 +631,14 @@ function PlayerQuizPage() {
               </span>
             </div>
           )}
+          {canRetryCurrentQuestion && (
+            <div className="live-answer-feedback retry">
+              <i className="bi bi-arrow-counterclockwise"></i>
+              <span>
+                <strong>Gỡ sai!</strong> Hãy chọn lại đáp án cho câu này.
+              </span>
+            </div>
+          )}
           <div className="live-answer-grid">
             {currentQuestion?.options.map((option, index) => (
               <button
@@ -425,17 +647,21 @@ function PlayerQuizPage() {
                 className={`live-answer-btn ${
                   selectedAnswer === index ? "selected" : ""
                 } ${
-                  hasAnsweredCurrent && index === currentQuestion.correctAnswer
+                  hasAnsweredCurrent && !canRetryCurrentQuestion && index === currentQuestion.correctAnswer
                     ? "correct"
                     : ""
                 } ${
                   hasAnsweredCurrent &&
+                  !canRetryCurrentQuestion &&
                   selectedAnswer === index &&
                   index !== currentQuestion.correctAnswer
                     ? "wrong"
                     : ""
                 }`}
-                disabled={hiddenOptions.includes(index)}
+                disabled={
+                  hiddenOptions.includes(index) ||
+                  (hasAnsweredCurrent && !canRetryCurrentQuestion)
+                }
                 onClick={() => handleAnswer(index)}
               >
                 <span>{String.fromCharCode(65 + index)}</span>

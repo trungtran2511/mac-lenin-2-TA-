@@ -22,13 +22,25 @@ export const buffCatalog = [
     id: "double_score",
     name: "Nhân đôi điểm",
     icon: "bi-stars",
-    description: "Câu trả lời đúng tiếp theo được x2 điểm.",
+    description: "Trả lời đúng câu này sẽ được x2 điểm!",
   },
   {
     id: "time_plus",
     name: "Cộng giờ",
     icon: "bi-clock-history",
-    description: "Cộng thêm 10 giây cho lượt chơi của bạn.",
+    description: "Cộng thêm 15 giây cho câu hiện tại.",
+  },
+  {
+    id: "retry_wrong",
+    name: "Gỡ sai",
+    icon: "bi-arrow-counterclockwise",
+    description: "Cho phép chọn lại nếu trả lời sai câu này.",
+  },
+  {
+    id: "skip_pressure",
+    name: "Bình tĩnh",
+    icon: "bi-hourglass-split",
+    description: "Cộng thêm 20 giây cho câu hiện tại.",
   },
   {
     id: "focus_jump",
@@ -125,13 +137,18 @@ export function storeToken(storageKey, roomCode, token) {
   localStorage.setItem(storageKey, JSON.stringify(records));
 }
 
-export function maybeCreateBuff(enabled, currentBuff) {
-  if (!enabled || currentBuff) return null;
-  if (Math.random() > 0.18) return null;
+export function maybeCreateBuff(enabled, currentBuff, questionIndex, buffCount = 0) {
+  if (!enabled || (currentBuff && !currentBuff.used)) return null;
+
+  // Lần 1: 100% (đảm bảo ít nhất 1 buff), lần 2: 40%, lần 3: 10%, lần 4+: 0%
+  const rates = [1.0, 0.40, 0.10];
+  const rate = buffCount < rates.length ? rates[buffCount] : 0;
+  if (Math.random() >= rate) return null;
 
   const buff = buffCatalog[Math.floor(Math.random() * buffCatalog.length)];
   return {
     ...buff,
+    questionIndex,
     receivedAt: new Date().toISOString(),
     used: false,
   };
