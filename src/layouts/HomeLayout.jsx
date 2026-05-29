@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import "../styles/fonts.css";
+import "../styles/theme.css";
 import "../styles/home/home.css";
 
 const HomeLayout = () => {

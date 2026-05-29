@@ -1,0 +1,9 @@
+/* ===== Font Definitions ===== */
+/* Instrument Serif — Display text (headings, logo) */
+/* Inter — Body text (navigation, descriptions) */
+/* Both imported via Google Fonts in index.html for performance */
+
+:root {
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

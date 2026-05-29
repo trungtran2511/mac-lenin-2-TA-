@@ -1,0 +1,309 @@
+/* ===== Main Content — Modern Organic Light Style ===== */
+/* Warm off-white background to match the cinematic natural hero, but distinct from pure white */
+
+.main-content-modern {
+  background: linear-gradient(145deg, #F8F7F5 0%, #EDEBE5 100%); /* Subtle gradient to enhance glass effect */
+  font-family: var(--font-body, 'Inter', sans-serif);
+  color: #000000;
+}
+
+/* ── Container ── */
+.mc-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Quote Section ── */
+.mc-quote-section {
+  padding: 5rem 0 4rem;
+  text-align: center;
+  border-top: 1px solid #EAE8E3;
+}
+
+.mc-quote {
+  font-family: var(--font-display, 'Instrument Serif', serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  color: #5C5C5C;
+  max-width: 50rem;
+  margin: 0 auto 2.5rem;
+  line-height: 1.5;
+}
+
+.mc-quote-image {
+  max-width: 450px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.mc-quote-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.mc-quote-image:hover img {
+  transform: scale(1.03);
+}
+
+/* ── Section Shared ── */
+.mc-label {
+  display: inline-block;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7A7A7A;
+  margin-bottom: 1rem;
+}
+
+.mc-section-title {
+  font-family: var(--font-display, 'Instrument Serif', serif);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin: 0 0 1rem;
+}
+
+.mc-section-desc {
+  font-size: 1.0625rem;
+  color: #5C5C5C;
+  max-width: 42rem;
+  line-height: 1.7;
+  margin: 0 0 3rem;
+}
+
+/* ── Features Section ── */
+.mc-features-section {
+  padding: 5rem 0;
+}
+
+.mc-features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+}
+
+.mc-feature-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.mc-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.mc-feature-img {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.mc-feature-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.mc-feature-card:hover .mc-feature-img img {
+  transform: scale(1.05);
+}
+
+.mc-feature-body {
+  padding: 1.75rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mc-feature-title {
+  font-family: var(--font-display, 'Instrument Serif', serif);
+  font-size: 1.625rem;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.5px;
+}
+
+.mc-feature-desc {
+  font-size: 0.9375rem;
+  color: #5C5C5C;
+  line-height: 1.7;
+  margin: 0 0 1.5rem;
+  flex: 1;
+}
+
+.mc-feature-cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: #000000;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.mc-feature-cta:hover {
+  transform: scale(1.03);
+  background: #222222;
+  color: #FFFFFF;
+}
+
+/* ── Knowledge Map Section ── */
+.mc-knowledge-section {
+  padding: 3rem 0 6rem;
+}
+
+.mc-knowledge-card {
+  display: flex;
+  align-items: stretch;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  min-height: 460px;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.mc-knowledge-card:hover {
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.mc-knowledge-text {
+  flex: 1;
+  padding: 3.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mc-knowledge-title {
+  font-family: var(--font-display, 'Instrument Serif', serif);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin: 0 0 1.25rem;
+}
+
+.mc-knowledge-desc {
+  font-size: 1rem;
+  color: #5C5C5C;
+  line-height: 1.7;
+  margin: 0 0 1.5rem;
+}
+
+.mc-knowledge-cert {
+  margin-bottom: 1.75rem;
+  border-radius: 8px;
+}
+
+.mc-knowledge-cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: #000000;
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.mc-knowledge-cta:hover {
+  transform: scale(1.03);
+  background: #222222;
+  color: #FFFFFF;
+}
+
+.mc-knowledge-img {
+  flex: 0 0 45%;
+  position: relative;
+  overflow: hidden;
+}
+
+.mc-knowledge-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .mc-features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .mc-knowledge-card {
+    flex-direction: column-reverse;
+    min-height: auto;
+  }
+
+  .mc-knowledge-img {
+    flex: none;
+    height: 240px;
+  }
+
+  .mc-knowledge-text {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .mc-container {
+    padding: 0 1.25rem;
+  }
+
+  .mc-quote-section {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .mc-features-section {
+    padding: 3rem 0;
+  }
+
+  .mc-feature-img {
+    height: 180px;
+  }
+
+  .mc-feature-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+
+  .mc-knowledge-section {
+    padding: 2rem 0 4rem;
+  }
+}
