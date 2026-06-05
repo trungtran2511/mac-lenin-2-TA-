@@ -15,8 +15,8 @@ export function truncateQuizText(text, maxLen = 120) {
 export function normalizeQuizQuestion(question) {
   return {
     ...question,
-    question: truncateQuizText(question.question, 130),
-    options: question.options.map((option) => truncateQuizText(option, 88)),
+    question: question.question.trim().replace(/\s+/g, " "),
+    options: question.options.map((option) => option.trim().replace(/\s+/g, " ")),
   };
 }
 

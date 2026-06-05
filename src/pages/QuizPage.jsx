@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { allQuizQuestions } from "../data/quizBank";
 import { normalizeQuizQuestion } from "../utils/quizText";
 import { textbookExplanations } from "../data/textbookExplanations";
@@ -184,8 +184,16 @@ const QuizPage = () => {
       {/* ========== CONFIGURATION MODAL ========== */}
       {showModal && (
         <div className="quiz-config-modal">
-          <div className="modal-content-custom">
-            <h2 className="modal-title-custom">Cấu Hình Quiz</h2>
+          <div className="modal-content-custom position-relative" style={{ paddingTop: "2.5rem" }}>
+            <Link
+              to="/"
+              className="position-absolute"
+              style={{ top: "1.2rem", left: "1.5rem", color: "#172026", fontSize: "1.8rem", lineHeight: 1 }}
+              title="Quay lại trang chủ"
+            >
+              <i className="bi bi-arrow-left-short"></i>
+            </Link>
+            <h2 className="modal-title-custom">Quizz</h2>
 
             <div>
               {/* Number of Questions */}
@@ -261,8 +269,18 @@ const QuizPage = () => {
                 Bắt Đầu Quiz
               </button>
               <div className="quiz-bank-note">
-                Ngân hàng hiện có {allQuizQuestions.length} câu. 10 câu / 5
+                Ngân hàng hiện có 504 câu. 10 câu / 5
                 phút, 30 câu / 15 phút, 50 câu / 30 phút.
+              </div>
+              <div className="d-flex flex-column gap-1 mt-3">
+                <Link to="/quiz/print" className="quiz-view-all-link mt-0">
+                  <i className="bi bi-journal-text"></i>
+                  Xem toàn bộ câu hỏi &amp; đáp án
+                </Link>
+                <Link to="/" className="quiz-view-all-link mt-0 text-secondary" style={{ fontSize: "0.85rem", opacity: 0.8 }}>
+                  <i className="bi bi-house-door"></i>
+                  Quay lại trang chủ
+                </Link>
               </div>
             </div>
           </div>
@@ -408,9 +426,8 @@ const QuizPage = () => {
                   {currentData.options.map((option, index) => (
                     <div key={index} className="col-md-6 py-3">
                       <label
-                        className={`bg-white overflow-hidden rounded-pill text-center answer-option ${
-                          selectedAnswer === index ? "active" : ""
-                        }`}
+                        className={`bg-white answer-option ${selectedAnswer === index ? "active" : ""
+                          }`}
                         onClick={() => handleSelectAnswer(index)}
                       >
                         <span className="answer-key">
@@ -427,7 +444,7 @@ const QuizPage = () => {
                           name={`question_${currentQuestion}`}
                           value={option}
                           checked={selectedAnswer === index}
-                          onChange={() => {}}
+                          onChange={() => { }}
                           style={{ display: "none" }}
                         />
                       </label>
@@ -463,16 +480,14 @@ const QuizPage = () => {
                         className="step d-flex flex-column align-items-center position-relative text-center"
                       >
                         <span
-                          className={`text-white position-absolute rounded-pill ${
-                            index <= currentQuestion ? "active" : ""
-                          } ${index < currentQuestion ? "finish" : ""}`}
+                          className={`text-white position-absolute rounded-pill ${index <= currentQuestion ? "active" : ""
+                            } ${index < currentQuestion ? "finish" : ""}`}
                         >
                           {index + 1}
                         </span>
                         <p
-                          className={`pt-4 ${
-                            index <= currentQuestion ? "active" : ""
-                          } ${index < currentQuestion ? "finish" : ""}`}
+                          className={`pt-4 ${index <= currentQuestion ? "active" : ""
+                            } ${index < currentQuestion ? "finish" : ""}`}
                         >
                           Question
                         </p>

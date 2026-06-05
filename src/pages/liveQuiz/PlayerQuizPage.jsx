@@ -39,6 +39,7 @@ function PlayerQuizPage() {
   const [buffNotification, setBuffNotification] = useState(null);
   const [showBuffNotify, setShowBuffNotify] = useState(false);
   const buffNotifyTimer = useRef(null);
+  const autoAdvanceTimer = useRef(null);
   const prevIndexRef = useRef(null);
 
   const playerToken = getStoredToken(LIVE_QUIZ_PLAYER_KEY, normalizedRoomCode);
@@ -57,8 +58,10 @@ function PlayerQuizPage() {
   // retry_wrong: chỉ cho phép retry tại câu hiện tại nếu buff active + đã trả lời sai
   const activeBuff = player?.active_buff;
   const canRetryCurrentQuestion =
-    activeBuff?.id === "retry_wrong" &&
+    (activeBuff?.id === "retry_wrong" ||
+      activeBuff?.id === "retry_previous_wrong") &&
     activeBuff?.used &&
+    !activeBuff?.completedRetry &&
     activeBuff?.appliedQuestionIndex === currentIndex &&
     hasAnsweredCurrent &&
     !isCurrentCorrect;
@@ -84,8 +87,13 @@ function PlayerQuizPage() {
         .map((buff) => buff.appliedQuestionId),
     );
     if (pendingDoubleQuestionId) doubledQuestionIds.add(pendingDoubleQuestionId);
+    const specialRetryBonus = usedBuffs.some(
+      (buff) => buff.id === "retry_previous_wrong" && buff.bonusAwarded,
+    )
+      ? 200
+      : 0;
 
-    return orderedQuestions.reduce(
+    const baseStats = orderedQuestions.reduce(
       (stats, question) => {
         const selected = updatedAnswers[question.id];
         if (selected === undefined) return stats;
@@ -99,6 +107,32 @@ function PlayerQuizPage() {
       },
       { score: 0, correctCount: 0 },
     );
+
+    return {
+      ...baseStats,
+      score: baseStats.score + specialRetryBonus,
+    };
+  };
+
+  const resetQuestionEffects = () => {
+    setHiddenOptions([]);
+    setExtraSeconds(0);
+    setQuestionStartedAt(Date.now());
+    setNowTick(Date.now());
+  };
+
+  const moveToQuestion = (index) => {
+    resetQuestionEffects();
+    setCurrentIndex(index);
+  };
+
+  const scheduleNextQuestion = () => {
+    if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    autoAdvanceTimer.current = setTimeout(() => {
+      if (currentIndex < orderedQuestions.length - 1) {
+        moveToQuestion(currentIndex + 1);
+      }
+    }, 700);
   };
 
   // --- Show buff notification toast ---
@@ -110,7 +144,14 @@ function PlayerQuizPage() {
     setShowBuffNotify(true);
     buffNotifyTimer.current = setTimeout(() => {
       setShowBuffNotify(false);
-    }, 3500);
+    }, 2200);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (buffNotifyTimer.current) clearTimeout(buffNotifyTimer.current);
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    };
   }, []);
 
   // --- Roll buff khi chuyển câu hỏi ---
@@ -126,7 +167,17 @@ function PlayerQuizPage() {
     // Roll buff mới cho câu hiện tại
     const expiredBuff = shouldExpire ? { ...currentBuff, used: true, expired: true } : currentBuff;
     const receivedBuffCount = (player.buffs || []).filter((b) => !b.expired).length;
-    const newBuff = maybeCreateBuff(room.buffs_enabled, expiredBuff, currentIndex, receivedBuffCount);
+    const lastBuffQuestionIndex = (player.buffs || []).reduce((latest, buff) => {
+      if (!Number.isInteger(buff.questionIndex)) return latest;
+      return Math.max(latest, buff.questionIndex);
+    }, -1);
+    const newBuff = maybeCreateBuff(
+      room.buffs_enabled,
+      expiredBuff,
+      currentIndex,
+      receivedBuffCount,
+      lastBuffQuestionIndex >= 0 ? lastBuffQuestionIndex : null,
+    );
 
     if (newBuff) {
       showBuffToast(newBuff);
@@ -138,10 +189,35 @@ function PlayerQuizPage() {
         );
         if (idx >= 0) updatedBuffs[idx] = expiredBuff;
       }
-      updatedBuffs.push(newBuff);
+      let appliedBuff = newBuff;
+
+      if (newBuff.id === "time_plus") {
+        setExtraSeconds((seconds) => seconds + 15);
+        appliedBuff = markBuffUsed(newBuff);
+      }
+
+      if (newBuff.id === "skip_pressure") {
+        setExtraSeconds((seconds) => seconds + 20);
+        appliedBuff = markBuffUsed(newBuff);
+      }
+
+      if (newBuff.id === "fifty_fifty" && currentQuestion) {
+        const wrongIndexes = currentQuestion.options
+          .map((_, index) => index)
+          .filter((index) => index !== currentQuestion.correctAnswer)
+          .slice(0, 2);
+        setHiddenOptions(wrongIndexes);
+        appliedBuff = markBuffUsed(newBuff);
+      }
+
+      if (newBuff.id === "retry_wrong") {
+        appliedBuff = markBuffUsed(newBuff, { appliedQuestionIndex: currentIndex });
+      }
+
+      updatedBuffs.push(appliedBuff);
 
       updateLivePlayer(player.id, {
-        active_buff: newBuff,
+        active_buff: appliedBuff,
         buffs: updatedBuffs,
       }).then(setPlayer).catch(console.warn);
     } else if (shouldExpire) {
@@ -264,6 +340,15 @@ function PlayerQuizPage() {
     if (room?.status !== "playing" || player?.status === "submitted") return;
     if (remainingSeconds > 0) return;
 
+    if (
+      activeBuff?.id === "retry_previous_wrong" &&
+      !activeBuff?.completedRetry &&
+      activeBuff?.appliedQuestionIndex === currentIndex
+    ) {
+      handleSubmit();
+      return;
+    }
+
     if (currentIndex >= orderedQuestions.length - 1) {
       handleSubmit();
       return;
@@ -281,6 +366,9 @@ function PlayerQuizPage() {
     player?.status,
     remainingSeconds,
     room?.status,
+    activeBuff?.id,
+    activeBuff?.completedRetry,
+    activeBuff?.appliedQuestionIndex,
   ]);
 
   const handleJoinInline = async (event) => {
@@ -337,15 +425,30 @@ function PlayerQuizPage() {
       activeBuff?.questionIndex === currentIndex;
 
     // Kết thúc retry nếu đang retry câu này
-    const shouldFinishRetry =
-      activeBuff?.id === "retry_wrong" &&
+    const isRetryBuffArmed =
+      (activeBuff?.id === "retry_wrong" ||
+        activeBuff?.id === "retry_previous_wrong") &&
       activeBuff?.used &&
+      !activeBuff?.completedRetry &&
       activeBuff?.appliedQuestionIndex === currentIndex;
+    const isRetryAttempt = hasAnsweredCurrent && isRetryBuffArmed;
+    const isSpecialRetryAttempt =
+      isRetryAttempt && activeBuff?.id === "retry_previous_wrong";
+    const shouldHoldForRetry =
+      !hasAnsweredCurrent &&
+      isRetryBuffArmed &&
+      answerIndex !== currentQuestion.correctAnswer;
 
     const usedBuff = shouldUseDouble
       ? markBuffUsed(activeBuff, { appliedQuestionId: currentQuestion.id })
-      : shouldFinishRetry
-        ? markBuffUsed(activeBuff, { completedRetry: true })
+      : isRetryAttempt
+        ? markBuffUsed(activeBuff, {
+          completedRetry: true,
+          bonusAwarded:
+            isSpecialRetryAttempt &&
+            answerIndex === currentQuestion.correctAnswer,
+          appliedQuestionId: currentQuestion.id,
+        })
         : activeBuff;
     const syncedBuffs = syncUsedBuff(player.buffs || [], usedBuff);
     const { score, correctCount } = calculateStats(
@@ -356,6 +459,51 @@ function PlayerQuizPage() {
 
     const answeredCount = Object.keys(updatedAnswers).length;
     const isFinished = answeredCount >= orderedQuestions.length;
+    const hasFinalRetryBonus = (player.buffs || []).some(
+      (buff) => buff.id === "retry_previous_wrong",
+    );
+    const firstWrongIndex = orderedQuestions.findIndex((question) => {
+      const selected = updatedAnswers[question.id];
+      return selected !== undefined && selected !== question.correctAnswer;
+    });
+    const shouldOfferFinalRetry =
+      isFinished &&
+      !isRetryAttempt &&
+      !hasFinalRetryBonus &&
+      firstWrongIndex >= 0;
+
+    if (shouldOfferFinalRetry) {
+      const retryQuestion = orderedQuestions[firstWrongIndex];
+      const specialBuff = markBuffUsed(
+        {
+          id: "retry_previous_wrong",
+          name: "Bonus sửa sai đặc biệt",
+          icon: "bi-arrow-counterclockwise",
+          description: "Chọn lại câu sai đầu tiên. Nếu đúng, cộng thêm 200 điểm.",
+          questionIndex: currentIndex,
+          receivedAt: new Date().toISOString(),
+        },
+        {
+          appliedQuestionIndex: firstWrongIndex,
+          appliedQuestionId: retryQuestion.id,
+          specialFinalRetry: true,
+        },
+      );
+      const updatedPlayer = await updateLivePlayer(player.id, {
+        answers: updatedAnswers,
+        score,
+        correct_count: correctCount,
+        answered_count: answeredCount,
+        active_buff: specialBuff,
+        buffs: [...(player.buffs || []), specialBuff],
+        status: "playing",
+      });
+
+      setPlayer(updatedPlayer);
+      showBuffToast(specialBuff);
+      moveToQuestion(firstWrongIndex);
+      return;
+    }
 
     const updatedPlayer = await updateLivePlayer(player.id, {
       answers: updatedAnswers,
@@ -364,11 +512,28 @@ function PlayerQuizPage() {
       answered_count: answeredCount,
       active_buff: usedBuff,
       buffs: syncedBuffs,
-      status: isFinished ? "submitted" : "playing",
-      submitted_at: isFinished ? new Date().toISOString() : player.submitted_at,
+      status: isFinished && !isSpecialRetryAttempt ? "submitted" : "playing",
+      submitted_at:
+        isFinished && !isSpecialRetryAttempt
+          ? new Date().toISOString()
+          : player.submitted_at,
     });
 
     setPlayer(updatedPlayer);
+    if (isSpecialRetryAttempt) {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+      autoAdvanceTimer.current = setTimeout(async () => {
+        const submittedPlayer = await updateLivePlayer(updatedPlayer.id, {
+          status: "submitted",
+          submitted_at: new Date().toISOString(),
+        });
+        setPlayer(submittedPlayer);
+      }, 2400);
+      return;
+    }
+    if (!isFinished && !shouldHoldForRetry) {
+      scheduleNextQuestion();
+    }
   };
 
   const useBuff = async () => {
@@ -389,29 +554,6 @@ function PlayerQuizPage() {
         .filter((index) => index !== currentQuestion.correctAnswer)
         .slice(0, 2);
       setHiddenOptions(wrongIndexes);
-    }
-
-    if (buff.id === "focus_jump") {
-      const unanswered = orderedQuestions
-        .map((question, index) => ({ question, index }))
-        .filter((item) => answers[item.question.id] === undefined);
-      if (unanswered.length) {
-        const jump = unanswered[Math.floor(Math.random() * unanswered.length)];
-        setHiddenOptions([]);
-        setExtraSeconds(0);
-        setQuestionStartedAt(Date.now());
-        setNowTick(Date.now());
-        // Mark used BEFORE jumping so the new question can roll a new buff
-        const usedB = markBuffUsed(buff);
-        const updatedPlayer = await updateLivePlayer(player.id, {
-          active_buff: usedB,
-          buffs: syncUsedBuff(player.buffs || [], usedB),
-        });
-        setPlayer(updatedPlayer);
-        prevIndexRef.current = null; // Allow buff roll on new question
-        setCurrentIndex(jump.index);
-        return;
-      }
     }
 
     if (buff.id === "retry_wrong") {
@@ -458,14 +600,23 @@ function PlayerQuizPage() {
     activeBuff?.used &&
     !activeBuff?.completedRetry &&
     activeBuff?.appliedQuestionIndex === currentIndex;
+  const isSpecialFinalRetry =
+    activeBuff?.id === "retry_previous_wrong" &&
+    activeBuff?.used &&
+    !activeBuff?.completedRetry &&
+    activeBuff?.appliedQuestionIndex === currentIndex;
+  const isSpecialFinalRetryResolved =
+    activeBuff?.id === "retry_previous_wrong" &&
+    activeBuff?.completedRetry &&
+    activeBuff?.appliedQuestionIndex === currentIndex;
+  const isSpecialFinalRetryCorrect =
+    isSpecialFinalRetryResolved && activeBuff?.bonusAwarded;
+  const displaySelectedAnswer = isSpecialFinalRetry ? undefined : selectedAnswer;
 
   // Special: double_score shows as active (auto-applies on answer)
-  const isDoubleActive =
-    activeBuff?.id === "double_score" &&
-    !activeBuff?.used &&
-    activeBuff?.questionIndex === currentIndex;
+  const isDoubleActive = false;
 
-  const showBuffButton = isBuffActiveForCurrentQuestion || isRetryWaiting;
+  const showBuffButton = false;
 
   if (error) {
     return (
@@ -583,7 +734,13 @@ function PlayerQuizPage() {
 
         {/* === BUFF NOTIFICATION TOAST === */}
         {buffNotification && showBuffNotify && (
-          <div className="live-buff-notification">
+          <div
+            className={`live-buff-notification ${
+              buffNotification.id === "retry_previous_wrong"
+                ? "special-final-retry"
+                : ""
+            }`}
+          >
             <div className="live-buff-notification-icon">
               <i className={`bi ${buffNotification.icon}`}></i>
             </div>
@@ -636,7 +793,40 @@ function PlayerQuizPage() {
           </div>
         )}
 
-        <section className="live-panel live-question-panel">
+        {isSpecialFinalRetryResolved && (
+          <div className="live-special-bonus-modal" role="status">
+            <div className="live-special-bonus-card">
+              <div className="live-special-bonus-badge">
+                <i
+                  className={`bi ${
+                    isSpecialFinalRetryCorrect
+                      ? "bi-stars"
+                      : "bi-emoji-expressionless-fill"
+                  }`}
+                ></i>
+              </div>
+              <p className="live-special-bonus-kicker">Bonus đặc biệt</p>
+              <h3>
+                {isSpecialFinalRetryCorrect
+                  ? "waoo giỏi thế +10đ"
+                  : "waooo bạn giỏi quá 1 câu mà sai tận 2 lần"}
+              </h3>
+              <p className="live-special-bonus-answer">
+                Đáp án đúng là{" "}
+                <strong>
+                  {String.fromCharCode(65 + currentQuestion.correctAnswer)}.{" "}
+                  {currentQuestion.options[currentQuestion.correctAnswer]}
+                </strong>
+              </p>
+            </div>
+          </div>
+        )}
+
+        <section
+          className={`live-panel live-question-panel ${
+            isSpecialFinalRetry ? "live-special-retry-panel" : ""
+          }`}
+        >
           <div className="live-question-head">
             <span>
               Câu {currentIndex + 1}/{orderedQuestions.length}
@@ -644,7 +834,7 @@ function PlayerQuizPage() {
             <strong>{player.score || 0} điểm</strong>
           </div>
           <h2>{currentQuestion?.question}</h2>
-          {hasAnsweredCurrent && !canRetryCurrentQuestion && (
+          {hasAnsweredCurrent && !canRetryCurrentQuestion && !isSpecialFinalRetryResolved && (
             <div
               className={`live-answer-feedback ${
                 isCurrentCorrect ? "correct" : "wrong"
@@ -664,11 +854,43 @@ function PlayerQuizPage() {
               </span>
             </div>
           )}
+          {isSpecialFinalRetryResolved && (
+            <div
+              className={`live-answer-feedback special-retry-result ${
+                isSpecialFinalRetryCorrect ? "correct" : "wrong"
+              }`}
+            >
+              <i
+                className={`bi ${
+                  isSpecialFinalRetryCorrect
+                    ? "bi-stars"
+                    : "bi-emoji-expressionless-fill"
+                }`}
+              ></i>
+              <span>
+                <strong>
+                  {isSpecialFinalRetryCorrect
+                    ? "waoo giỏi thế +10đ"
+                    : "waooo bạn giỏi quá 1 câu mà sai tận 2 lần"}
+                </strong>{" "}
+                Đáp án đúng là{" "}
+                <strong>
+                  {String.fromCharCode(65 + currentQuestion.correctAnswer)}.{" "}
+                  {currentQuestion.options[currentQuestion.correctAnswer]}
+                </strong>
+              </span>
+            </div>
+          )}
           {canRetryCurrentQuestion && (
             <div className="live-answer-feedback retry">
               <i className="bi bi-arrow-counterclockwise"></i>
               <span>
-                <strong>Gỡ sai!</strong> Hãy chọn lại đáp án cho câu này.
+                <strong>
+                  {isSpecialFinalRetry ? "Bonus đặc biệt!" : "Gỡ sai!"}
+                </strong>{" "}
+                {isSpecialFinalRetry
+                  ? "Sửa lại câu sai đầu tiên. Trả lời đúng được cộng thêm 200 điểm."
+                  : "Hãy chọn lại đáp án cho câu này."}
               </span>
             </div>
           )}
@@ -678,15 +900,19 @@ function PlayerQuizPage() {
                 key={option}
                 type="button"
                 className={`live-answer-btn ${
-                  selectedAnswer === index ? "selected" : ""
+                  displaySelectedAnswer === index ? "selected" : ""
                 } ${
-                  hasAnsweredCurrent && !canRetryCurrentQuestion && index === currentQuestion.correctAnswer
+                  hasAnsweredCurrent &&
+                  !canRetryCurrentQuestion &&
+                  !isSpecialFinalRetry &&
+                  index === currentQuestion.correctAnswer
                     ? "correct"
                     : ""
                 } ${
                   hasAnsweredCurrent &&
                   !canRetryCurrentQuestion &&
-                  selectedAnswer === index &&
+                  !isSpecialFinalRetry &&
+                  displaySelectedAnswer === index &&
                   index !== currentQuestion.correctAnswer
                     ? "wrong"
                     : ""

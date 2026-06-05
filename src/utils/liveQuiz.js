@@ -1,4 +1,5 @@
 import { normalizeQuizQuestion } from "./quizText";
+import { textbookExplanations } from "../data/textbookExplanations";
 
 export const LIVE_QUIZ_HOST_KEY = "live_quiz_host_tokens";
 export const LIVE_QUIZ_PLAYER_KEY = "live_quiz_player_tokens";
@@ -9,6 +10,9 @@ export const liveQuizTimeLimits = {
   20: 10 * 60,
   30: 15 * 60,
   50: 30 * 60,
+  100: 60 * 60,
+  200: 120 * 60,
+  504: 300 * 60,
 };
 
 export const buffCatalog = [
@@ -104,15 +108,18 @@ export function pickRoomQuestions(allQuestions, config) {
   return fisherYatesShuffle(filtered)
     .slice(0, Number(config.numberOfQuestions))
     .map(normalizeQuizQuestion)
-    .map((question) => ({
-      id: question.id,
-      chapter: question.chapter,
-      difficulty: question.difficulty,
-      question: question.question,
-      options: question.options,
-      correctAnswer: question.correctAnswer,
-      explanation: question.explanation || "",
-    }));
+    .map((question) => {
+      const expData = textbookExplanations[question.id];
+      return {
+        id: question.id,
+        chapter: question.chapter,
+        difficulty: question.difficulty,
+        question: question.question,
+        options: question.options,
+        correctAnswer: question.correctAnswer,
+        explanation: expData ? expData.explanation : (question.explanation || ""),
+      };
+    });
 }
 
 export function createQuestionOrder(questionCount, seed) {
@@ -137,15 +144,34 @@ export function storeToken(storageKey, roomCode, token) {
   localStorage.setItem(storageKey, JSON.stringify(records));
 }
 
-export function maybeCreateBuff(enabled, currentBuff, questionIndex, buffCount = 0) {
+export function maybeCreateBuff(
+  enabled,
+  currentBuff,
+  questionIndex,
+  buffCount = 0,
+  lastBuffQuestionIndex = null,
+) {
   if (!enabled || (currentBuff && !currentBuff.used)) return null;
+  if (
+    currentBuff?.id === "retry_previous_wrong" &&
+    !currentBuff?.completedRetry
+  ) {
+    return null;
+  }
+  if (
+    Number.isInteger(lastBuffQuestionIndex) &&
+    questionIndex === lastBuffQuestionIndex + 1
+  ) {
+    return null;
+  }
 
   // Lần 1: 100% (đảm bảo ít nhất 1 buff), lần 2: 40%, lần 3: 10%, lần 4+: 0%
   const rates = [1.0, 0.40, 0.10];
   const rate = buffCount < rates.length ? rates[buffCount] : 0;
   if (Math.random() >= rate) return null;
 
-  const buff = buffCatalog[Math.floor(Math.random() * buffCatalog.length)];
+  const availableBuffs = buffCatalog.filter((buff) => buff.id !== "focus_jump");
+  const buff = availableBuffs[Math.floor(Math.random() * availableBuffs.length)];
   return {
     ...buff,
     questionIndex,

@@ -4,6 +4,7 @@ import QuizLayout from "./layouts/QuizLayout";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import QuizResultsPage from "./pages/QuizResultsPage";
+import QuizPrintPage from "./pages/QuizPrintPage";
 import FlipCardPage from "./pages/FlipCardPage";
 import TuviPage from "./pages/Tuvipage";
 import Courses from "./pages/Courses";
@@ -25,8 +26,10 @@ function App() {
         <Route element={<QuizLayout />}>
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/quiz/results" element={<QuizResultsPage />} />
-          {/* <Route path="/quiz/history" element={<QuizHistoryPage />} /> */}
         </Route>
+
+        {/* Trang xem / in toàn bộ câu hỏi (không dùng QuizLayout) */}
+        <Route path="/quiz/print" element={<QuizPrintPage />} />
 
         <Route path="/flip" element={<FlipCardPage />} />
 
@@ -38,8 +41,6 @@ function App() {
         <Route path="/live-quiz" element={<LiveQuizHomePage />} />
         <Route path="/live-quiz/host/:roomCode" element={<HostRoomPage />} />
         <Route path="/live-quiz/play/:roomCode" element={<PlayerQuizPage />} />
-
-        {/* <Route path="*" element={<NotFoundPage />} /> */}
       </Routes>
     </BrowserRouter>
   );

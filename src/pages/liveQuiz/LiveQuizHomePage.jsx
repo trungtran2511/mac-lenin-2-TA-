@@ -216,6 +216,9 @@ function LiveQuizHomePage() {
                   <option value="20">20 câu / 10 phút</option>
                   <option value="30">30 câu / 15 phút</option>
                   <option value="50">50 câu / 30 phút</option>
+                  <option value="100">100 câu / 60 phút</option>
+                  <option value="200">200 câu / 120 phút</option>
+                  <option value="504">Tất cả 504 câu</option>
                 </select>
               </label>
               <label>

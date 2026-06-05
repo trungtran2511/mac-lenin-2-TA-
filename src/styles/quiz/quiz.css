@@ -876,6 +876,24 @@ button {
   text-align: center;
 }
 
+.quiz-view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  width: 100%;
+  justify-content: center;
+  color: #007d84;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.quiz-view-all-link:hover {
+  color: #005f65;
+  text-decoration: underline;
+}
+
 .finish-early-btn {
   display: inline-flex;
   align-items: center;
