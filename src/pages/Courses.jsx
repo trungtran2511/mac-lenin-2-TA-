@@ -155,10 +155,10 @@ const Courses = () => {
           <a
             className="download-textbook-btn"
             href="/docs/giao_trinh_full.pdf"
-            download="Giao trinh full.pdf"
+            download="GT học phần Kinh tế chính trị MNL(K) Tr đầu- Tr100x.pdf"
           >
             <i className="bi bi-download"></i>
-            Tải giáo trình Full.pdf
+            Tải giáo trình Full (PDF)
           </a>
           <a
             className="preview-textbook-btn"
