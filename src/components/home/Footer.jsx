@@ -32,19 +32,7 @@ const Footer = () => {
 
             {/* Right Column */}
             <div className="footer-contact">
-              <h4 className="footer-heading">Liên hệ nhóm</h4>
-              <div className="footer-contact-list">
-                <div className="footer-contact-item">
-                  <i className="bi bi-envelope-at" />
-                  <span>tranduytrung251105@gmail.com</span>
-                </div>
-                <div className="footer-contact-item">
-                  <i className="bi bi-telephone" />
-                  <span>0822777349</span>
-                </div>
-              </div>
-
-              <h4 className="footer-heading" style={{ marginTop: "2rem" }}>
+              <h4 className="footer-heading">
                 Theo dõi
               </h4>
               <div className="contact-card-container">
@@ -54,7 +42,7 @@ const Footer = () => {
                     <span></span>
                     <span></span>
                     <a
-                      href="https://www.facebook.com/trung.tran.678726?mibextid=wwXIfr"
+                      href="https://www.facebook.com/share/1EhBDQt8Nz/?mibextid=wwXIfr"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Facebook"
@@ -126,7 +114,7 @@ const Footer = () => {
               © 2026 Nhóm 4 — Website học tập Triết học Mác‑Lênin.
             </span>
             <div className="footer-bottom-links">
-              {["Giới thiệu", "Bài học", "Liên hệ"].map((item) => (
+              {["Giới thiệu", "Bài học"].map((item) => (
                 <a key={item} href="#" className="footer-bottom-link">
                   {item}
                 </a>
