@@ -4,11 +4,105 @@ import "../styles/flip/flip.css";
 import { Link, useNavigate } from "react-router-dom";
 import { flipImages } from "../data/flipImagesData";
 
+// Database câu hỏi cho Monopoly Matcher (Phân Loại Tài Phiệt)
+const matcherPool = [
+  {
+    text: "Các doanh nghiệp ký thỏa thuận cam kết giữ sản lượng và giá bán không thấp hơn mức quy định, nhưng độc lập về sản xuất và thương mại.",
+    answer: "Cartel",
+    ex: "Cartel là liên minh độc quyền sơ khai nhất, các thành viên chỉ cam kết về giá và sản lượng, vẫn độc lập sản xuất và tiêu thụ."
+  },
+  {
+    text: "Một công ty phân phối chung được thành lập để bán toàn bộ đường của 10 nhà máy mía đường lớn nhằm đè bẹp các xí nghiệp nhỏ lẻ.",
+    answer: "Syndicate",
+    ex: "Syndicate thống nhất đầu mối phân phối sản phẩm hoặc thu mua nguyên liệu, thành viên độc lập về sản xuất."
+  },
+  {
+    text: "Các xí nghiệp dệt thỏa thuận chỉ mua bông thông qua một văn phòng thu mua duy nhất để đè giá nguyên liệu đầu vào.",
+    answer: "Syndicate",
+    ex: "Syndicate tập trung đầu mối thương mại để ép giá nguyên liệu đầu vào có lợi nhất."
+  },
+  {
+    text: "Các hãng xe hơi lớn hợp nhất toàn bộ nhà xưởng, nhân viên và bộ máy quản trị dưới sự chỉ đạo của một ban giám đốc chung, chủ cũ nhận cổ tức.",
+    answer: "Trust",
+    ex: "Trust sáp nhập hoàn toàn sản xuất, lưu thông và quản trị thành một ban quản trị chung."
+  },
+  {
+    text: "Liên minh độc quyền đa ngành khổng lồ kết hợp hàng chục xí nghiệp công nghiệp và ngân hàng lớn làm trung tâm điều phối vốn.",
+    answer: "Consortium",
+    ex: "Consortium (hoặc Concern) liên kết đa ngành từ sản xuất, thương mại đến tài chính ngân hàng."
+  },
+  {
+    text: "Một tập đoàn tài phiệt kiểm soát từ mỏ dầu, nhà máy lọc dầu, mạng lưới đường ống, trạm xăng, xí nghiệp bảo hiểm đến ngân hàng đầu tư.",
+    answer: "Consortium",
+    ex: "Consortium kết hợp sản xuất công nghiệp dọc-ngang và tư bản tài chính ngân hàng làm hạt nhân."
+  },
+  {
+    text: "Chính phủ trực tiếp đầu tư ngân sách để nắm giữ độc quyền ngành Điện lực, Đường sắt và Sản xuất vũ khí quốc phòng.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Nhà nước nắm độc quyền các ngành then chốt thông qua quốc hữu hóa hoặc đầu tư công."
+  },
+  {
+    text: "Ngân hàng lớn bắt tay với các tập đoàn công nghiệp chế tạo máy bay để cùng đầu tư sản xuất và xuất khẩu tư bản ra nước ngoài.",
+    answer: "Consortium",
+    ex: "Sự thâm nhập lẫn nhau giữa độc quyền ngân hàng và độc quyền công nghiệp tạo thành tài phiệt tài chính."
+  },
+  {
+    text: "Chính phủ ban hành gói cứu trợ tài chính trị giá hàng tỷ USD để giải cứu các ngân hàng thương mại độc quyền tư nhân khỏi nguy cơ sụp đổ.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Độc quyền nhà nước dùng nguồn lực công để cứu trợ hoặc bảo hiểm cho các thế lực độc quyền tư nhân."
+  },
+  {
+    text: "Các công ty dầu mỏ phân chia khu vực tiêu thụ miền Nam và miền Bắc để độc chiếm thị trường mà không xâm phạm lãnh thổ của nhau.",
+    answer: "Cartel",
+    ex: "Phân chia thị trường tiêu thụ là một dạng thỏa hiệp thị phần điển hình của Cartel."
+  },
+  {
+    text: "Các công ty dược phẩm lớn sáp nhập toàn bộ văn phòng nghiên cứu phát triển và hệ thống kinh doanh dưới một ban chỉ đạo chung.",
+    answer: "Trust",
+    ex: "Việc sáp nhập hoàn toàn cả nghiên cứu, sản xuất, tiêu thụ dưới ban quản trị chung là đặc thù của Trust."
+  },
+  {
+    text: "Nhà nước ban hành các đạo luật chống độc quyền độc chiếm, áp đặt trần giá bán điện hoặc điều tiết hoạt động của các tập đoàn tư nhân khổng lồ.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Nhà nước sử dụng pháp luật để điều tiết kinh tế vĩ mô, xoa dịu mâu thuẫn xã hội có lợi cho chế độ độc quyền."
+  }
+];
+
+const categoryMap = {
+  "Cartel": "cartel",
+  "Syndicate": "syndicate",
+  "Trust": "trust",
+  "Consortium": "consortium",
+  "Độc quyền Nhà nước": "state-monopoly"
+};
+
 export default function FlipCardPage() {
+  const [activeTab, setActiveTab] = useState("flip");
   const [showQuitConfirm, setShowQuitConfirm] = useState(false);
   const navigate = useNavigate();
 
+  // --- MONOPOLY MATCHER STATE ---
+  const [matcherScore, setMatcherScore] = useState(0);
+  const [matcherTimeLeft, setMatcherTimeLeft] = useState(60);
+  const [matcherState, setMatcherState] = useState("intro"); // 'intro', 'playing', 'ended'
+  const [matcherQuestions, setMatcherQuestions] = useState([]);
+  const [matcherCurrentIndex, setMatcherCurrentIndex] = useState(0);
+  const [matcherFeedback, setMatcherFeedback] = useState(null);
+  const [matcherHighScore, setMatcherHighScore] = useState(() => {
+    return parseInt(localStorage.getItem("matcher_highscore")) || 0;
+  });
+  const [matcherHistory, setMatcherHistory] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("matcher_history")) || [];
+    } catch {
+      return [];
+    }
+  });
+
+  // --- MEMORY FLIP GAME JQUERY EFFECT ---
   useEffect(() => {
+    if (activeTab !== "flip") return;
+
     // localStorage functions
     function set(key, value) {
       localStorage.setItem(key, value);
@@ -82,38 +176,9 @@ export default function FlipCardPage() {
 
     function createCardFallback(index) {
       const symbols = [
-        "CT", // Cạnh tranh
-        "DQ", // Độc quyền
-        "TB", // Tư bản
-        "NH", // Ngân hàng
-        "LN", // Lênin
-        "MC", // Mác
-        "TC", // Tài chính
-        "TP", // Tài phiệt
-        "XK", // Xuất khẩu
-        "TD", // Thu thuộc địa
-        "NN", // Nhà nước
-        "CN", // Concern
-        "CG", // Conglomerate
-        "VT", // Vệ tinh
-        "EU", // Liên minh châu Âu
-        "BM", // Biên giới mềm
-        "LS", // Lịch sử
-        "XH", // Xã hội hóa
-        "SH", // Sở hữu
-        "QH", // Quan hệ
-        "LN", // Lợi nhuận
-        "GC", // Giá cả
-        "TH", // Thỏa hiệp
-        "KH", // Khủng hoảng
-        "TD", // Tín dụng
-        "TT", // Tích tụ
-        "TP", // Tập trung
-        "SX", // Sản xuất
-        "LD", // Lao động
-        "TD", // Thặng dư
-        "CTD", // Cạnh tranh tự do
-        "DQNN", // Độc quyền nhà nước
+        "CT", "DQ", "TB", "NH", "LN", "MC", "TC", "TP", "XK", "TD", "NN", "CN",
+        "CG", "VT", "EU", "BM", "LS", "XH", "SH", "QH", "LN", "GC", "TH", "KH",
+        "TD", "TT", "TP", "SX", "LD", "TD", "CTD", "DQNN"
       ];
       const hue = (index * 41) % 360;
       const svg = `
@@ -163,40 +228,28 @@ export default function FlipCardPage() {
       $(".memory-status-title").text(status.label);
       $(".memory-status-detail").text(status.detail);
 
-      // If won game
       if (text == "nice") {
         increase("flip_won");
         decrease("flip_abandoned");
-      }
-
-      // If lost game
-      else if (text == "fail") {
+      } else if (text == "fail") {
         increase("flip_lost");
         decrease("flip_abandoned");
       }
-
-      // Update stats
       updateStats();
     }
 
-    /* LOAD GAME ACTIONS */
-
     // Init localStorage
     if (!get("flip_won") && !get("flip_lost") && !get("flip_abandoned")) {
-      //Overall Game stats
       set("flip_won", 0);
       set("flip_lost", 0);
       set("flip_abandoned", 0);
-      //Best times
       set("flip_casual", "-:-");
       set("flip_medium", "-:-");
       set("flip_hard", "-:-");
-      //Cards stats
       set("flip_matched", 0);
       set("flip_wrong", 0);
     }
 
-    // Fill stats
     if (
       get("flip_won") > 0 ||
       get("flip_lost") > 0 ||
@@ -205,7 +258,6 @@ export default function FlipCardPage() {
       updateStats();
     }
 
-    // Toggle start screen cards
     $('.game-intro-wrapper .game-card:not(".twist")').on("click", function (e) {
       $(this)
         .toggleClass("active")
@@ -217,7 +269,6 @@ export default function FlipCardPage() {
       }
     });
 
-    // Start game
     $(".play").on("click", function (e) {
       e.preventDefault();
       increase("flip_abandoned");
@@ -227,7 +278,6 @@ export default function FlipCardPage() {
         timer = 1000,
         level = $(this).data("level");
 
-      // Set game timer and difficulty
       if (level == 8) {
         difficulty = "casual";
         timer *= level * 4;
@@ -239,7 +289,6 @@ export default function FlipCardPage() {
         timer *= level * 6;
       }
 
-      // Add difficulty class to container
       $(".flip-game-container")
         .removeClass("casual-mode medium-mode hard-mode")
         .addClass(difficulty + "-mode");
@@ -249,7 +298,6 @@ export default function FlipCardPage() {
         var startGame = Date.now(),
           obj = [];
 
-        // Create and add shuffled cards to game
         for (var i = 0; i < level; i++) {
           obj.push(i);
         }
@@ -261,10 +309,8 @@ export default function FlipCardPage() {
 
         for (var cardIndex = 0; cardIndex < shu.length; cardIndex++) {
           var imageIndex = shu[cardIndex];
-          var imageUrl = flipImages[imageIndex] || flipImages[0];
           var fallbackUrl = createCardFallback(imageIndex);
 
-          // Tạo card element
           var card = $(
             '<div class="game-card">' +
               '<div class="game-flipper">' +
@@ -276,7 +322,6 @@ export default function FlipCardPage() {
               "</div>",
           );
 
-          // Set background image cho game-back
           card
             .find(".game-back")
             .css({
@@ -291,7 +336,6 @@ export default function FlipCardPage() {
           card
             .find(".game-card-img")
             .attr("src", fallbackUrl)
-            .attr("data-remote-src", imageUrl)
             .on("error", function () {
               $(this).attr("src", fallbackUrl);
             });
@@ -299,7 +343,6 @@ export default function FlipCardPage() {
           card.appendTo(".flip-game-container .game-area");
         }
 
-        // Set card actions
         $(".game-area .game-card").on({
           mousedown: function () {
             if ($(".game-area").attr("data-paused") == 1) {
@@ -307,12 +350,12 @@ export default function FlipCardPage() {
             }
 
             var $this = $(this).addClass("active");
-            var data = $this.find(".game-back").attr("data-img"); // Đổi từ data-f sang data-img
+            var data = $this.find(".game-back").attr("data-img");
 
             if ($(".game-area").find(".game-card.active").length > 1) {
               setTimeout(function () {
                 var thisCard = $(
-                  ".game-area .active .game-back[data-img='" + data + "']", // Đổi data-f sang data-img
+                  ".game-area .active .game-back[data-img='" + data + "']",
                 );
 
                 if (thisCard.length > 1) {
@@ -322,7 +365,6 @@ export default function FlipCardPage() {
                     .empty();
                   increase("flip_matched");
 
-                  // Win game
                   if (!$(".game-area .game-card").length) {
                     var time = Date.now() - startGame;
                     if (
@@ -331,7 +373,6 @@ export default function FlipCardPage() {
                     ) {
                       set("flip_" + difficulty, time);
                     }
-
                     startScreen("nice");
                   }
                 } else {
@@ -343,7 +384,6 @@ export default function FlipCardPage() {
           },
         });
 
-        // Add timer bar
         $('<i class="game-timer"></i>')
           .prependTo(".game-area")
           .css({
@@ -356,11 +396,9 @@ export default function FlipCardPage() {
             },
           );
 
-        // Set keyboard (p)ause and [esc] actions
         $(window)
           .off()
           .on("keyup", function (e) {
-            // Pause game. (p)
             if (e.keyCode == 80) {
               if ($(".game-area").attr("data-paused") == 1) {
                 $(".game-area").attr("data-paused", "0");
@@ -374,7 +412,6 @@ export default function FlipCardPage() {
                 );
               }
             }
-            // Abandon game. (ESC)
             if (e.keyCode == 27) {
               startScreen("flip");
               if ($(".game-area").attr("data-paused") == 1) {
@@ -387,28 +424,116 @@ export default function FlipCardPage() {
       });
     });
 
-    // Share button toggle
     $(".share-click").on("click", function () {
       $(this).toggleClass("open");
       $(".share-box-wrapper").slideToggle("fast");
     });
 
-    // Cleanup on unmount
     return () => {
       $(window).off();
       $(".play").off();
       $(".share-click").off();
       $('.game-intro-wrapper .game-card:not(".twist")').off();
+      $(".game-area").empty();
     };
-  }, []);
+  }, [activeTab]);
+
+  // --- MONOPOLY MATCHER GAME LOGIC ---
+  useEffect(() => {
+    let interval = null;
+    if (activeTab === "matcher" && matcherState === "playing") {
+      interval = setInterval(() => {
+        setMatcherTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            endMatcherGame();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [activeTab, matcherState]);
+
+  const startMatcherGame = () => {
+    const shuffled = [...matcherPool].sort(() => Math.random() - 0.5);
+    setMatcherQuestions(shuffled);
+    setMatcherScore(0);
+    setMatcherTimeLeft(60);
+    setMatcherCurrentIndex(0);
+    setMatcherFeedback(null);
+    setMatcherState("playing");
+  };
+
+  const endMatcherGame = (finalScore = null) => {
+    setMatcherState("ended");
+    const scoreToSave = finalScore !== null ? finalScore : matcherScore;
+
+    if (scoreToSave > matcherHighScore) {
+      setMatcherHighScore(scoreToSave);
+      localStorage.setItem("matcher_highscore", scoreToSave);
+    }
+
+    const newHistory = [
+      { score: scoreToSave, date: new Date().toLocaleDateString("vi-VN") },
+      ...matcherHistory
+    ].slice(0, 5);
+    setMatcherHistory(newHistory);
+    localStorage.setItem("matcher_history", JSON.stringify(newHistory));
+  };
+
+  const handleAnswer = (category) => {
+    if (matcherFeedback) return;
+
+    const currentQuestion = matcherQuestions[matcherCurrentIndex];
+    const isCorrect = currentQuestion.answer === category;
+
+    let newScore = matcherScore;
+    if (isCorrect) {
+      newScore += 10;
+      setMatcherScore(newScore);
+      setMatcherFeedback({
+        type: "success",
+        message: "Đúng rồi! +10 điểm 🎉",
+        explanation: currentQuestion.ex
+      });
+    } else {
+      newScore = Math.max(0, newScore - 5);
+      setMatcherScore(newScore);
+      setMatcherFeedback({
+        type: "error",
+        message: `Sai rồi! -5 điểm (Đáp án đúng: ${currentQuestion.answer}) ❌`,
+        explanation: currentQuestion.ex
+      });
+    }
+  };
+
+  const handleNextQuestion = () => {
+    setMatcherFeedback(null);
+    if (matcherCurrentIndex < matcherQuestions.length - 1) {
+      setMatcherCurrentIndex((prev) => prev + 1);
+    } else {
+      endMatcherGame();
+    }
+  };
+
+  // Helper render tab change
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setMatcherState("intro");
+  };
 
   return (
     <div className="flip-game-container">
+      {/* QUIT MODAL */}
       {showQuitConfirm && (
         <div className="game-quit-modal">
           <div className="game-quit-box">
-            <h3>Thoát Memory Game?</h3>
-            <p>Tiến trình ván hiện tại sẽ không được lưu nếu bạn thoát.</p>
+            <h3>Thoát phòng game?</h3>
+            <p>Tiến trình hiện tại sẽ không được lưu nếu bạn rời đi.</p>
             <div className="game-quit-actions">
               <button type="button" onClick={() => setShowQuitConfirm(false)}>
                 Chơi tiếp
@@ -424,150 +549,303 @@ export default function FlipCardPage() {
           </div>
         </div>
       )}
-      <div className="game-full-outer">
-        <div id="g" className="game-area"></div>
-        <div className="game-intro-wrapper">
-          <div className="common-header">
-            <div className="common-logo">
-              <Link to="/" className="back-home-btn">
-                <i className="bi bi-house-door-fill"></i>
-                <span className="back-text">Trang chủ</span>
-              </Link>
+
+      {/* GAME SELECTION TABS */}
+      <div className="game-selector-container">
+        <button
+          type="button"
+          className={`game-selector-tab ${activeTab === "flip" ? "active" : ""}`}
+          onClick={() => handleTabChange("flip")}
+        >
+          <i className="bi bi-grid-3x3-gap-fill"></i>
+          Lật thẻ ghi nhớ
+        </button>
+        <button
+          type="button"
+          className={`game-selector-tab ${activeTab === "matcher" ? "active" : ""}`}
+          onClick={() => handleTabChange("matcher")}
+        >
+          <i className="bi bi-shuffle"></i>
+          Phân loại Tài phiệt
+        </button>
+      </div>
+
+      {/* RENDER ACTIVE TAB */}
+      {activeTab === "flip" ? (
+        <div className="game-full-outer">
+          <div id="g" className="game-area"></div>
+          <div className="game-intro-wrapper">
+            <div className="common-header">
+              <div className="common-logo">
+                <Link to="/" className="back-home-btn">
+                  <i className="bi bi-house-door-fill"></i>
+                  <span className="back-text">Trang chủ</span>
+                </Link>
+              </div>
             </div>
-          </div>
-          <div className="game-header">
-            <div className="game-name">
-              <h1 data-text="MEMORY GAME">MEMORY GAME</h1>
+            <div className="game-header">
+              <div className="game-name">
+                <h1 data-text="MEMORY LAB">MEMORY LAB</h1>
+              </div>
             </div>
-          </div>
-          <div className="game-box-outer">
-            <div className="game-logo">
-              <div className="logo-inner">
-                <div className="game-card memory-status-card active twist">
-                  <div className="game-flipper">
-                    <div className="game-back game-front memory-status is-ready">
-                      <div className="memory-status-eyebrow">
-                        Bảng điều khiển
-                      </div>
-                      <div className="memory-status-title">Sẵn sàng</div>
-                      <div className="memory-status-detail">
-                        Chọn cấp độ để bắt đầu ván mới.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="game-card memory-info-card">
-                  <div className="game-flipper">
-                    <div className="game-front memory-module">
-                      <div className="memory-module-icon">
-                        <i
-                          className="bi bi-bar-chart-line"
-                          aria-hidden="true"
-                        ></i>
-                      </div>
-                      <div className="memory-module-copy">
-                        <span>Thống kê</span>
-                        <small>Theo dõi số ván và lượt lật</small>
-                      </div>
-                    </div>
-                    <div className="game-back content-box stats-container" id="stats">
-                      <div className="padded">
-                        <h2>Thống kê</h2>
-                        Bạn chưa chơi ván nào trong phiên này.
-                        <a href="javascript:void(0);" className="playnow">
-                          Chơi ngay
-                        </a>
+            <div className="game-box-outer">
+              <div className="game-logo">
+                <div className="logo-inner">
+                  <div className="game-card memory-status-card active twist">
+                    <div className="game-flipper">
+                      <div className="game-back game-front memory-status is-ready">
+                        <div className="memory-status-eyebrow">
+                          Bảng điều khiển
+                        </div>
+                        <div className="memory-status-title">Sẵn sàng</div>
+                        <div className="memory-status-detail">
+                          Chọn cấp độ để bắt đầu ván mới.
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="game-card memory-info-card">
-                  <div className="game-flipper">
-                    <div className="game-front memory-module">
-                      <div className="memory-module-icon">
-                        <i className="bi bi-info-circle" aria-hidden="true"></i>
+                  <div className="game-card memory-info-card">
+                    <div className="game-flipper">
+                      <div className="game-front memory-module">
+                        <div className="memory-module-icon">
+                          <i className="bi bi-bar-chart-line" aria-hidden="true"></i>
+                        </div>
+                        <div className="memory-module-copy">
+                          <span>Thống kê</span>
+                          <small>Theo dõi số ván và lượt lật</small>
+                        </div>
                       </div>
-                      <div className="memory-module-copy">
-                        <span>Luật chơi</span>
-                        <small>Lật hai thẻ và tìm cặp giống nhau</small>
-                      </div>
-                    </div>
-                    <div className="game-back content-box instructions">
-                      <div className="padded">
-                        <h2>Cách chơi</h2>
-                        <p>Nhấn [p] để tạm dừng, hoặc [ESC] để bỏ ván.</p>
-                        <p>
-                          Lật hai thẻ bất kỳ, quan sát hình phía sau và tìm
-                          đúng cặp giống nhau.
-                        </p>
-                        <p>
-                          Ghép đúng thì cặp thẻ biến mất; ghép sai thì thẻ úp
-                          lại.
-                        </p>
-                        <p>
-                          Xóa hết thẻ càng nhanh càng tốt để phá kỷ lục.
-                        </p>
+                      <div className="game-back content-box stats-container" id="stats">
+                        <div className="padded">
+                          <h2>Thống kê</h2>
+                          Bạn chưa chơi ván nào trong phiên này.
+                          <a href="javascript:void(0);" className="playnow">
+                            Chơi ngay
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="game-card memory-level-card">
-                  <div className="game-flipper">
-                    <div className="game-back content-box levels">
-                      <div className="levels-heading">
-                        <i className="bi bi-play-fill" aria-hidden="true"></i>
-                        <span>Chọn cấp độ</span>
+                  <div className="game-card memory-info-card">
+                    <div className="game-flipper">
+                      <div className="game-front memory-module">
+                        <div className="memory-module-icon">
+                          <i className="bi bi-info-circle" aria-hidden="true"></i>
+                        </div>
+                        <div className="memory-module-copy">
+                          <span>Luật chơi</span>
+                          <small>Lật hai thẻ và tìm cặp giống nhau</small>
+                        </div>
                       </div>
-                      <a
-                        href="javascript:void(0);"
-                        data-level="8"
-                        className="play"
-                      >
-                        Dễ
-                      </a>
-                      <a
-                        href="javascript:void(0);"
-                        data-level="18"
-                        className="play"
-                      >
-                        Vừa
-                      </a>
-                      <a
-                        href="javascript:void(0);"
-                        data-level="32"
-                        className="play"
-                      >
-                        Khó
-                      </a>
+                      <div className="game-back content-box instructions">
+                        <div className="padded">
+                          <h2>Cách chơi</h2>
+                          <p>Nhấn [p] để tạm dừng, hoặc [ESC] để bỏ ván.</p>
+                          <p>
+                            Lật hai thẻ bất kỳ, quan sát thuật ngữ phía sau và tìm đúng cặp tương ứng.
+                          </p>
+                          <p>
+                            Ghép đúng thì cặp thẻ biến mất; ghép sai thì thẻ úp lại.
+                          </p>
+                          <p>
+                            Xóa hết thẻ càng nhanh càng tốt để phá kỷ lục.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="game-card memory-level-card">
+                    <div className="game-flipper">
+                      <div className="game-back content-box levels">
+                        <div className="levels-heading">
+                          <i className="bi bi-play-fill" aria-hidden="true"></i>
+                          <span>Chọn cấp độ</span>
+                        </div>
+                        <a href="javascript:void(0);" data-level="8" className="play">Dễ</a>
+                        <a href="javascript:void(0);" data-level="18" className="play">Vừa</a>
+                        <a href="javascript:void(0);" data-level="32" className="play">Khó</a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <footer className="footer-wrapper">
-            &copy; Copyright {new Date().getFullYear()} Group4-SE1919. All
-            rights reserved.
-          </footer>
+            <footer className="footer-wrapper">
+              &copy; Copyright {new Date().getFullYear()} Nhóm 4-SE1919. All rights reserved.
+            </footer>
 
-          <div className="social-media-main">
-            <div className="share-box-wrapper">
-              <div className="share-box-inner">
-                <div
-                  title="facebook share"
-                  className="social-media-icon facebook-color"
-                  id="fb_share"
-                ></div>
+            <div className="social-media-main">
+              <div className="share-box-wrapper">
+                <div className="share-box-inner">
+                  <div
+                    title="facebook share"
+                    className="social-media-icon facebook-color"
+                    id="fb_share"
+                  ></div>
+                </div>
               </div>
+              <div className="share-title share-click" title="Share"></div>
             </div>
-            <div className="share-title share-click" title="Share"></div>
           </div>
         </div>
-      </div>
+      ) : (
+        /* MONOPOLY MATCHER GAME VIEW */
+        <div className="matcher-game-outer">
+          {/* HEADER STATS */}
+          <div className="matcher-header-stats">
+            <div className="matcher-stat-item">
+              <span className="matcher-stat-label">Điểm</span>
+              <span className="matcher-stat-value">{matcherScore}</span>
+            </div>
+            <div className="matcher-stat-item">
+              <span className="matcher-stat-label">Thời gian</span>
+              <span className="matcher-stat-value">{matcherTimeLeft}s</span>
+            </div>
+            <div className="matcher-stat-item">
+              <span className="matcher-stat-label">Kỷ lục</span>
+              <span className="matcher-stat-value">{matcherHighScore}</span>
+            </div>
+          </div>
+
+          {/* TIMER PROGRESS BAR */}
+          {matcherState === "playing" && (
+            <div className="matcher-timer-container">
+              <div
+                className="matcher-timer-fill"
+                style={{ width: `${(matcherTimeLeft / 60) * 100}%` }}
+              ></div>
+            </div>
+          )}
+
+          {/* GAME CARDS */}
+          {matcherState === "intro" && (
+            <div className="matcher-card">
+              <div className="matcher-card-glow"></div>
+              <span className="matcher-question-counter">Minigame</span>
+              <h2 className="matcher-title-large">PHÂN LOẠI TÀI PHIỆT</h2>
+              <p className="matcher-intro-copy">
+                Các định nghĩa hoặc ví dụ thực tế liên quan đến các mô hình độc quyền của <strong>Chương 4 (Triết học Mác - Lênin)</strong> sẽ xuất hiện.
+                Nhiệm vụ của bạn là chọn đúng hình thức độc quyền tương ứng trước khi hết thời gian!
+              </p>
+              <button
+                type="button"
+                className="matcher-btn-primary"
+                onClick={startMatcherGame}
+              >
+                Bắt đầu ngay
+              </button>
+            </div>
+          )}
+
+          {matcherState === "playing" && matcherQuestions.length > 0 && (
+            <div className="matcher-card">
+              <div className="matcher-card-glow"></div>
+              <span className="matcher-question-counter">
+                Câu hỏi {matcherCurrentIndex + 1} / {matcherQuestions.length}
+              </span>
+              
+              <p className="matcher-question-text">
+                "{matcherQuestions[matcherCurrentIndex].text}"
+              </p>
+
+              {/* BUCKET CATEGORY BUTTONS */}
+              <div className="matcher-buckets">
+                {Object.keys(categoryMap).map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={`matcher-bucket-btn ${categoryMap[cat]}`}
+                    onClick={() => handleAnswer(cat)}
+                    disabled={!!matcherFeedback}
+                  >
+                    <span>{cat}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* FEEDBACK OVERLAY */}
+              {matcherFeedback && (
+                <div className={`matcher-feedback-overlay ${matcherFeedback.type}`}>
+                  <h3 className="matcher-feedback-title">
+                    {matcherFeedback.type === "success" ? (
+                      <i className="bi bi-check-circle-fill"></i>
+                    ) : (
+                      <i className="bi bi-exclamation-triangle-fill"></i>
+                    )}
+                    {matcherFeedback.message}
+                  </h3>
+                  <p className="matcher-feedback-explanation">
+                    {matcherFeedback.explanation}
+                  </p>
+                  <button
+                    type="button"
+                    className="matcher-next-btn"
+                    onClick={handleNextQuestion}
+                  >
+                    Tiếp tục
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {matcherState === "ended" && (
+            <div className="matcher-card">
+              <div className="matcher-card-glow"></div>
+              <span className="matcher-question-counter">Hoàn thành</span>
+              <h2 className="matcher-title-large">KẾT THÚC VÁN ĐẤU</h2>
+              
+              <div className="matcher-ended-summary">
+                <p className="matcher-intro-copy">
+                  Bạn đã đạt được <strong>{matcherScore}</strong> điểm!
+                  {matcherScore >= matcherHighScore && matcherScore > 0 ? (
+                    <span style={{ display: "block", color: "#4caf50", fontWeight: "bold", marginTop: "0.5rem" }}>
+                      🎉 KỶ LỤC MỚI CỦA BẠN!
+                    </span>
+                  ) : null}
+                </p>
+
+                <button
+                  type="button"
+                  className="matcher-btn-primary"
+                  onClick={startMatcherGame}
+                >
+                  Chơi lại
+                </button>
+
+                {/* HISTORY LEADERBOARD */}
+                {matcherHistory.length > 0 && (
+                  <div className="matcher-history-section">
+                    <h3 className="matcher-history-title">Lịch sử lượt chơi gần đây</h3>
+                    <table className="matcher-history-table">
+                      <thead>
+                        <tr>
+                          <th>Ngày chơi</th>
+                          <th>Điểm đạt được</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {matcherHistory.map((item, idx) => (
+                          <tr key={idx}>
+                            <td>{item.date}</td>
+                            <td>{item.score} điểm</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* QUIT BUTTON */}
       <button
         type="button"
         className="quit-game-btn"
