@@ -82,38 +82,38 @@ export default function FlipCardPage() {
 
     function createCardFallback(index) {
       const symbols = [
-        "M",
-        "L",
-        "Y",
-        "V",
-        "BC",
-        "DV",
-        "TT",
-        "CN",
-        "XH",
-        "NT",
-        "GC",
-        "DT",
-        "LS",
-        "QH",
-        "TD",
-        "TH",
-        "VC",
-        "YT",
-        "LL",
-        "TN",
-        "HD",
-        "ND",
-        "TG",
-        "PP",
-        "CM",
-        "LD",
-        "CT",
-        "KT",
-        "VH",
-        "PL",
-        "GT",
-        "CN",
+        "CT", // Cạnh tranh
+        "DQ", // Độc quyền
+        "TB", // Tư bản
+        "NH", // Ngân hàng
+        "LN", // Lênin
+        "MC", // Mác
+        "TC", // Tài chính
+        "TP", // Tài phiệt
+        "XK", // Xuất khẩu
+        "TD", // Thu thuộc địa
+        "NN", // Nhà nước
+        "CN", // Concern
+        "CG", // Conglomerate
+        "VT", // Vệ tinh
+        "EU", // Liên minh châu Âu
+        "BM", // Biên giới mềm
+        "LS", // Lịch sử
+        "XH", // Xã hội hóa
+        "SH", // Sở hữu
+        "QH", // Quan hệ
+        "LN", // Lợi nhuận
+        "GC", // Giá cả
+        "TH", // Thỏa hiệp
+        "KH", // Khủng hoảng
+        "TD", // Tín dụng
+        "TT", // Tích tụ
+        "TP", // Tập trung
+        "SX", // Sản xuất
+        "LD", // Lao động
+        "TD", // Thặng dư
+        "CTD", // Cạnh tranh tự do
+        "DQNN", // Độc quyền nhà nước
       ];
       const hue = (index * 41) % 360;
       const svg = `
@@ -129,7 +129,7 @@ export default function FlipCardPage() {
           <path d="M52 220 C98 154, 130 246, 174 174 S244 122, 270 88" fill="none" stroke="#f2b441" stroke-width="14" stroke-linecap="round"/>
           <rect x="70" y="72" width="180" height="176" rx="24" fill="rgba(247,248,243,.9)"/>
           <text x="160" y="168" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="#172026">${symbols[index] || index + 1}</text>
-          <text x="160" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#007d84">TRIET HOC</text>
+          <text x="160" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#007d84">TRIET 2 - CH4</text>
         </svg>`;
 
       return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;

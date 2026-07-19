@@ -35,7 +35,7 @@ const FEATURES = [
   },
   {
     title: "Triết Profile",
-    desc: "Trả lời 12 tình huống vui để xem bạn nghiêng về duy vật biện chứng, duy tâm, biện chứng hay thực tiễn luận.",
+    desc: "Trả lời 12 tình huống để xem tư duy kinh tế của bạn nghiêng về cạnh tranh tự do, độc quyền tư nhân hay độc quyền nhà nước.",
     image: philosophyImage,
     link: "/philosophy-profile",
     cta: "Check vibe",

@@ -1,158 +1,38 @@
 export const philosophyQuotes = {
-  gt01: {
-    text: "Mọi khoa học đều thừa, nếu hình thức biểu hiện và bản chất của sự vật trực tiếp trùng khớp với nhau.",
-    author: "C. Mác",
-    source: "Tư bản, quyển III",
-    url: "https://www.marxists.org/archive/marx/works/1894-c3/ch48.htm",
+  "cd01": {
+    "text": "Tự do cạnh tranh đẻ ra tập trung sản xuất và sự tập trung sản xuất này, khi phát triển đến một mức độ nhất định, lại dẫn tới độc quyền.",
+    "author": "V.I. Lênin",
+    "source": "Chủ nghĩa đế quốc, giai đoạn tột cùng của chủ nghĩa tư bản",
+    "url": "https://www.marxists.org/vietnamese/lenin/1916/imperialism/index.htm"
   },
-  gt02: {
-    text: "Không phải ý thức của con người quyết định tồn tại của họ; trái lại, tồn tại xã hội quyết định ý thức của họ.",
-    author: "C. Mác",
-    source: "Lời tựa Góp phần phê phán kinh tế chính trị",
-    url: "https://www.marxists.org/archive/marx/works/1859/critique-pol-economy/preface.htm",
+  "cd02": {
+    "text": "Chủ nghĩa tư bản độc quyền nhà nước là sự chuẩn bị vật chất đầy đủ nhất cho chủ nghĩa xã hội, là phòng chờ đi vào chủ nghĩa xã hội.",
+    "author": "V.I. Lênin",
+    "source": "Thảm họa sắp tới và cách đấu tranh chống thảm họa đó",
+    "url": "https://www.marxists.org/vietnamese/lenin/index.htm"
   },
-  gt03: {
-    text: "Tự do không nằm ở sự độc lập tưởng tượng với quy luật tự nhiên, mà ở sự nhận thức những quy luật ấy.",
-    author: "F. Engels",
-    source: "Chống Đuy-rinh",
-    url: "https://www.marxists.org/archive/marx/works/1877/anti-duhring/ch09.htm",
+  "cd03": {
+    "text": "Sự tập trung tư liệu sản xuất và xã hội hóa lao động đạt đến cái điểm mà chúng không còn tương hợp với cái vỏ tư bản chủ nghĩa của chúng nữa.",
+    "author": "Karl Marx",
+    "source": "Tư bản, quyển I",
+    "url": "https://www.marxists.org/vietnamese/marx-engels/index.htm"
   },
-  gt04: {
-    text: "Vũ khí phê phán dĩ nhiên không thể thay thế sự phê phán bằng vũ khí.",
-    author: "C. Mác",
-    source: "Góp phần phê phán triết học pháp quyền của Hegel",
-    url: "https://www.marxists.org/archive/marx/works/1843/critique-hpr/intro.htm",
+  "gt01": {
+    "text": "Độc quyền sinh ra từ cạnh tranh tự do, nhưng không thủ tiêu cạnh tranh, trái lại còn làm cạnh tranh trở nên gay gắt và tàn nhẫn hơn.",
+    "author": "V.I. Lênin",
+    "source": "Chủ nghĩa đế quốc, giai đoạn tột cùng của chủ nghĩa tư bản",
+    "url": "https://www.marxists.org/vietnamese/lenin/1916/imperialism/index.htm"
   },
-  gt05: {
-    text: "Các nhà triết học chỉ giải thích thế giới bằng nhiều cách khác nhau; vấn đề là cải tạo thế giới.",
-    author: "C. Mác",
-    source: "Luận cương về Feuerbach",
-    url: "https://www.marxists.org/archive/marx/works/1845/theses/theses.htm",
+  "gt02": {
+    "text": "Tư bản tài chính là kết quả của sự hợp nhất giữa tư bản ngân hàng của một số ít ngân hàng độc quyền lớn nhất với tư bản của những liên minh độc quyền các nhà công nghiệp.",
+    "author": "V.I. Lênin",
+    "source": "Chủ nghĩa đế quốc, giai đoạn tột cùng của chủ nghĩa tư bản",
+    "url": "https://www.marxists.org/vietnamese/lenin/1916/imperialism/index.htm"
   },
-  gt06: {
-    text: "Lý luận trở thành lực lượng vật chất khi nó thâm nhập vào quần chúng.",
-    author: "C. Mác",
-    source: "Góp phần phê phán triết học pháp quyền của Hegel",
-    url: "https://www.marxists.org/archive/marx/works/1843/critique-hpr/intro.htm",
-  },
-  gt07: {
-    text: "Vận động là phương thức tồn tại của vật chất.",
-    author: "F. Engels",
-    source: "Biện chứng của tự nhiên",
-    url: "https://www.marxists.org/archive/marx/works/1883/don/ch02.htm",
-  },
-  gt08: {
-    text: "Ý thức không bao giờ có thể là cái gì khác hơn tồn tại được ý thức.",
-    author: "C. Mác và F. Engels",
-    source: "Hệ tư tưởng Đức",
-    url: "https://www.marxists.org/archive/marx/works/1845/german-ideology/ch01a.htm",
-  },
-  gt09: {
-    text: "Không phải ý thức quyết định đời sống, mà đời sống quyết định ý thức.",
-    author: "C. Mác và F. Engels",
-    source: "Hệ tư tưởng Đức",
-    url: "https://www.marxists.org/archive/marx/works/1845/german-ideology/ch01a.htm",
-  },
-  gt10: {
-    text: "Biện chứng không biết gì là cuối cùng, tuyệt đối, thiêng liêng.",
-    author: "F. Engels",
-    source: "Ludwig Feuerbach và sự cáo chung của triết học cổ điển Đức",
-    url: "https://www.marxists.org/archive/marx/works/1886/ludwig-feuerbach/ch04.htm",
-  },
-  gt11: {
-    text: "Sự thay đổi về lượng, vượt qua một điểm nhất định, sẽ chuyển thành sự khác nhau về chất.",
-    author: "F. Engels",
-    source: "Biện chứng của tự nhiên",
-    url: "https://www.marxists.org/archive/marx/works/1883/don/ch02.htm",
-  },
-  gt12: {
-    text: "Vấn đề liệu tư duy con người có chân lý khách quan hay không là một vấn đề thực tiễn.",
-    author: "C. Mác",
-    source: "Luận cương về Feuerbach",
-    url: "https://www.marxists.org/archive/marx/works/1845/theses/theses.htm",
-  },
-  gt13: {
-    text: "Từ trực quan sinh động đến tư duy trừu tượng, và từ đó đến thực tiễn.",
-    author: "V.I. Lênin",
-    source: "Bút ký triết học",
-    url: "https://www.marxists.org/archive/lenin/works/1914/cons-logic/",
-  },
-  gt14: {
-    text: "Con người trước hết phải ăn, uống, ở và mặc rồi mới có thể làm chính trị, khoa học, nghệ thuật, tôn giáo.",
-    author: "F. Engels",
-    source: "Điếu văn bên mộ C. Mác",
-    url: "https://www.marxists.org/archive/marx/works/1883/death/burial.htm",
-  },
-  gt15: {
-    text: "Cối xay tay đem lại xã hội có lãnh chúa phong kiến; cối xay hơi nước đem lại xã hội có nhà tư bản công nghiệp.",
-    author: "C. Mác",
-    source: "Sự khốn cùng của triết học",
-    url: "https://www.marxists.org/archive/marx/works/1847/poverty-philosophy/ch02.htm",
-  },
-  gt16: {
-    text: "Cơ sở kinh tế thay đổi thì toàn bộ kiến trúc thượng tầng đồ sộ cũng ít nhiều nhanh chóng biến đổi theo.",
-    author: "C. Mác",
-    source: "Lời tựa Góp phần phê phán kinh tế chính trị",
-    url: "https://www.marxists.org/archive/marx/works/1859/critique-pol-economy/preface.htm",
-  },
-  gt17: {
-    text: "Lịch sử của mọi xã hội từ trước đến nay là lịch sử đấu tranh giai cấp.",
-    author: "C. Mác và F. Engels",
-    source: "Tuyên ngôn của Đảng Cộng sản",
-    url: "https://www.marxists.org/archive/marx/works/1848/communist-manifesto/ch01.htm",
-  },
-  gt18: {
-    text: "Giai cấp vô sản chẳng có gì để mất ngoài xiềng xích của mình.",
-    author: "C. Mác và F. Engels",
-    source: "Tuyên ngôn của Đảng Cộng sản",
-    url: "https://www.marxists.org/archive/marx/works/1848/communist-manifesto/ch04.htm",
-  },
-  gt19: {
-    text: "Một dân tộc áp bức dân tộc khác không thể là dân tộc tự do.",
-    author: "F. Engels",
-    source: "Thư gửi Karl Kautsky",
-    url: "https://www.marxists.org/archive/marx/works/1882/letters/82_09_12.htm",
-  },
-  gt20: {
-    text: "Vô sản tất cả các nước, đoàn kết lại!",
-    author: "C. Mác và F. Engels",
-    source: "Tuyên ngôn của Đảng Cộng sản",
-    url: "https://www.marxists.org/archive/marx/works/1848/communist-manifesto/ch04.htm",
-  },
-  gt21: {
-    text: "Phương thức sản xuất đời sống vật chất quy định quá trình sinh hoạt xã hội, chính trị và tinh thần nói chung.",
-    author: "C. Mác",
-    source: "Lời tựa Góp phần phê phán kinh tế chính trị",
-    url: "https://www.marxists.org/archive/marx/works/1859/critique-pol-economy/preface.htm",
-  },
-  gt22: {
-    text: "Những tư tưởng thống trị của mỗi thời đại bao giờ cũng là tư tưởng của giai cấp thống trị.",
-    author: "C. Mác và F. Engels",
-    source: "Hệ tư tưởng Đức",
-    url: "https://www.marxists.org/archive/marx/works/1845/german-ideology/ch01b.htm",
-  },
-  gt23: {
-    text: "Bản chất con người không phải là cái trừu tượng cố hữu của cá nhân riêng biệt.",
-    author: "C. Mác",
-    source: "Luận cương về Feuerbach",
-    url: "https://www.marxists.org/archive/marx/works/1845/theses/theses.htm",
-  },
-  gt24: {
-    text: "Sự tha hóa của người công nhân trong sản phẩm nghĩa là lao động của anh ta tồn tại bên ngoài anh ta.",
-    author: "C. Mác",
-    source: "Bản thảo kinh tế - triết học năm 1844",
-    url: "https://www.marxists.org/archive/marx/works/1844/manuscripts/labour.htm",
-  },
-  gt25: {
-    text: "Con người là tổng hòa những quan hệ xã hội.",
-    author: "C. Mác",
-    source: "Luận cương về Feuerbach",
-    url: "https://www.marxists.org/archive/marx/works/1845/theses/theses.htm",
-  },
-  gt26: {
-    text: "Không có gì quý hơn độc lập, tự do.",
-    author: "Hồ Chí Minh",
-    source: "Lời kêu gọi chống Mỹ, cứu nước",
-    url: "https://nvsk.vnanet.vn/chan-ly-khong-co-gi-quy-hon-doc-lap-tu-do-trong-di-san-tu-tuong-ho-chi-minh-1-122877.vna",
-  },
+  "gt03": {
+    "text": "Mâu thuẫn giữa trình độ xã hội hóa ngày càng cao của lực lượng sản xuất với quan hệ sản xuất chiếm hữu tư nhân tư bản chủ nghĩa quyết định giới hạn lịch sử của chủ nghĩa tư bản.",
+    "author": "Karl Marx",
+    "source": "Tập hợp các tác phẩm của Karl Marx và Friedrich Engels",
+    "url": "https://www.marxists.org/vietnamese/marx-engels/index.htm"
+  }
 };

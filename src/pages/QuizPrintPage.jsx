@@ -6,37 +6,41 @@ const ANSWER_LABELS = ["A", "B", "C", "D"];
 const DIFFICULTY_LABEL = { 0: "Dễ", 1: "Trung bình", 2: "Khó" };
 
 function QuizPrintPage() {
-  const chapters = useMemo(
-    () => [...new Set(allQuizQuestions.map((q) => q.chapter))].sort((a, b) => a - b),
-    []
-  );
-// Mapping subchapter codes to readable titles (based on textbook TOC)
+  // Mapping subchapter codes to readable titles (based on textbook TOC)
   const subChapterTitles = {
-    "1.I": "I. TRIẾT HỌC VÀ VẤN ĐỀ CƠ BẢN CỦA TRIẾT HỌC",
-    "1.II": "II. TRIẾT HỌC MÁC – LÊNIN VÀ VAI TRÒ CỦA TRIẾT HỌC MÁC – LÊNIN",
-    "2.I": "I. VẬT CHẤT VÀ Ý THỨC",
-    "2.II": "II. PHÉP BIỆN CHỨNG DUY VẬT",
-    "2.III": "III. LÝ LUẬN NHẬN THỨC",
-    "3.I": "I. HỌC THUYẾT HÌNH THÁI KINH TẾ – XÃ HỘI",
-    "3.II": "II. GIAI CẤP VÀ DÂN TỘC",
-    "3.III": "III. NHÀ NƯỚC VÀ CÁCH MẠNG XÃ HỘI",
-    "3.IV": "IV. Ý THỨC XÃ HỘI",
-    "3.V": "V. TRIẾT HỌC VỀ CON NGƯỜI",
+    "4.I": "I. CẠNH TRANH VÀ ĐỘC QUYỀN TRONG NỀN KINH TẾ THỊ TRƯỜNG",
+    "4.II": "II. LÝ LUẬN CỦA V.I. LÊNIN VỀ ĐỘC QUYỀN VÀ ĐỘC QUYỀN NHÀ NƯỚC TRONG CNTB",
+    "4.III": "III. BIỂU HIỆN MỚI CỦA ĐỘC QUYỀN; VAI TRÒ VÀ GIỚI HẠN LỊCH SỬ CỦA CNTB",
   };
 
+  const allSubChapters = useMemo(() => {
+    const set = new Set();
+    allQuizQuestions.forEach((q) => {
+      if (q.subChapter) set.add(q.subChapter);
+    });
+    const romanToNum = { "I": 1, "II": 2, "III": 3 };
+    return Array.from(set).sort((a, b) => {
+      const [aCh, aSec] = a.split('.');
+      const [bCh, bSec] = b.split('.');
+      if (aCh !== bCh) return Number(aCh) - Number(bCh);
+      const aVal = romanToNum[aSec] || 0;
+      const bVal = romanToNum[bSec] || 0;
+      return aVal - bVal;
+    });
+  }, []);
 
-  const [filterChapter, setFilterChapter] = useState("all");
+  const [filterSubChapter, setFilterSubChapter] = useState("all");
   const [showAnswers, setShowAnswers] = useState(true);
   const [showIndex, setShowIndex] = useState(true);
   const [pageSize, setPageSize] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const [isPrinting, setIsPrinting] = useState(false);
 
-  // Bộ lọc chương
+  // Bộ lọc mục lục
   const filteredQuestions = useMemo(() => {
-    if (filterChapter === "all") return allQuizQuestions;
-    return allQuizQuestions.filter((q) => q.chapter === Number(filterChapter));
-  }, [filterChapter]);
+    if (filterSubChapter === "all") return allQuizQuestions;
+    return allQuizQuestions.filter((q) => q.subChapter === filterSubChapter);
+  }, [filterSubChapter]);
 
   // Extract distinct subchapters from filtered questions
   const subChapters = useMemo(() => {
@@ -44,11 +48,14 @@ function QuizPrintPage() {
     filteredQuestions.forEach((q) => {
       if (q.subChapter) set.add(q.subChapter);
     });
+    const romanToNum = { "I": 1, "II": 2, "III": 3 };
     return Array.from(set).sort((a, b) => {
       const [aCh, aSec] = a.split('.');
       const [bCh, bSec] = b.split('.');
       if (aCh !== bCh) return Number(aCh) - Number(bCh);
-      return Number(aSec) - Number(bSec);
+      const aVal = romanToNum[aSec] || 0;
+      const bVal = romanToNum[bSec] || 0;
+      return aVal - bVal;
     });
   }, [filteredQuestions]);
 
@@ -93,18 +100,20 @@ function QuizPrintPage() {
             <strong>{filteredQuestions.length}</strong> câu
           </span>
 
-          {/* Filter chapter */}
+          {/* Filter subChapter */}
           <select
             className="qp-select"
-            value={filterChapter}
+            value={filterSubChapter}
             onChange={(e) => {
-              setFilterChapter(e.target.value);
+              setFilterSubChapter(e.target.value);
               setCurrentPage(1);
             }}
           >
-            <option value="all">Tất cả chương</option>
-            {chapters.map((c) => (
-              <option key={c} value={c}>Chương {c}</option>
+            <option value="all">Tất cả mục (Chương 4)</option>
+            {allSubChapters.map((subCh) => (
+              <option key={subCh} value={subCh}>
+                Mục {subCh}
+              </option>
             ))}
           </select>
 
@@ -154,8 +163,8 @@ function QuizPrintPage() {
 
       {/* ===== PRINT HEADER (chỉ hiện khi in) ===== */}
       <div className="qp-print-header print-only">
-        <h1>Bộ câu hỏi Triết học Mác–Lênin</h1>
-        <p>Tổng: {filteredQuestions.length} câu · {filterChapter === "all" ? "Tất cả chương" : `Chương ${filterChapter}`}</p>
+        <h1>Bộ câu hỏi ôn tập Triết học 2 - Chương 4</h1>
+        <p>Tổng: {filteredQuestions.length} câu · {filterSubChapter === "all" ? "Tất cả các mục" : `Mục ${filterSubChapter}`}</p>
       </div>
 
       {/* ===== QUESTION LIST ===== */}
@@ -257,7 +266,7 @@ function QuizPrintPage() {
 
       {/* ===== PRINT FOOTER ===== */}
       <div className="qp-print-footer print-only">
-        <p>Nhóm 2 — Không gian học Triết học Mác–Lênin</p>
+        <p>Nhóm 2 — Không gian học Triết học 2 (Chương 4)</p>
       </div>
 
       {/* ===== STYLES ===== */}

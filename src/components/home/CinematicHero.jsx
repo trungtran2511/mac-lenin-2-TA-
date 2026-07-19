@@ -10,7 +10,6 @@ const NAV_ITEMS = [
   { label: "Bài học", to: "/courses" },
   { label: "Quiz", to: "/quiz" },
   { label: "Memory Lab", to: "/flip" },
-  { label: "Live Quiz", to: "/live-quiz" },
 ];
 
 const CinematicHero = () => {
@@ -169,14 +168,13 @@ const CinematicHero = () => {
       {/* ── Hero Content ── */}
       <div className="hero-content">
         <h1 className="hero-headline animate-fade-rise">
-          Khám phá <span className="muted">Triết học,</span> hiểu sâu{" "}
-          <span className="muted">thế giới quan.</span>
+          Khám phá <span className="muted">Cạnh tranh,</span> làm chủ{" "}
+          <span className="muted">Độc quyền.</span>
         </h1>
 
         <p className="hero-description animate-fade-rise-delay">
-          Không gian học tập Triết học Mác&nbsp;‑&nbsp;Lênin dành cho sinh viên
-          AI1901. Học theo chủ đề, ôn thi bằng quiz, lật thẻ ghi nhớ và khám
-          phá lá số tử vi cùng AI.
+          Không gian học tập Triết học 2 - Chương 4 (Cạnh tranh và độc quyền trong nền kinh tế thị trường) dành cho sinh viên
+          AI1901. Học theo chủ đề, ôn thi bằng 100 câu hỏi quiz, lật thẻ ghi nhớ và ôn tập thông minh.
         </p>
 
         <Link to="/courses" className="hero-cta animate-fade-rise-delay-2">

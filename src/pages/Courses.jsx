@@ -149,8 +149,7 @@ const Courses = () => {
           <i className="bi bi-book"></i> Học theo giáo trình
         </h1>
         <p className="mb-0 fs-5">
-          <i className="bi bi-lightbulb"></i> Nội dung bám theo Giáo trình
-          Triết học Mác - Lênin
+          <i className="bi bi-lightbulb"></i> Nội dung bám theo Chương 4 - Giáo trình Kinh tế chính trị Mác - Lênin
         </p>
         <a
           className="download-textbook-btn"
@@ -158,7 +157,7 @@ const Courses = () => {
           download
         >
           <i className="bi bi-download"></i>
-          Tải giáo trình DOCX
+          Tải giáo trình
         </a>
       </div>
 

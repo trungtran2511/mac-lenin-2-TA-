@@ -19,7 +19,7 @@ const QuizPage = () => {
   const [showFinishConfirm, setShowFinishConfirm] = useState(false);
   const [quizConfig, setQuizConfig] = useState({
     numberOfQuestions: 10,
-    chapter: "random",
+    subChapter: "all",
     difficulty: "random",
   });
   const [filteredQuestions, setFilteredQuestions] = useState([]);
@@ -30,19 +30,22 @@ const QuizPage = () => {
 
   const navigate = useNavigate();
 
-  // Get unique chapters from allQuizQuestions
-  const chapters = [...new Set(allQuizQuestions.map((q) => q.chapter))].sort(
-    (a, b) => a - b,
-  );
+  // Get unique subChapters from allQuizQuestions
+  const subChapters = [...new Set(allQuizQuestions.map((q) => q.subChapter))].sort();
+  const subChapterNames = {
+    "4.I": "Mục I: Cạnh tranh và độc quyền",
+    "4.II": "Mục II: Lý luận độc quyền của Lênin",
+    "4.III": "Mục III: Biểu hiện mới & giới hạn lịch sử",
+  };
 
   // ============ FILTER QUESTIONS ============
   const handleStartQuiz = () => {
     let filtered = [...allQuizQuestions];
 
-    // Filter by chapter
-    if (quizConfig.chapter !== "random") {
+    // Filter by subChapter
+    if (quizConfig.subChapter !== "all") {
       filtered = filtered.filter(
-        (q) => q.chapter === parseInt(quizConfig.chapter),
+        (q) => q.subChapter === quizConfig.subChapter,
       );
     }
 
@@ -217,26 +220,26 @@ const QuizPage = () => {
                 <option value="50">50 câu</option>
               </select>
 
-              {/* Chapter Selection */}
+              {/* Chapter/SubChapter Selection */}
               <div className="config-label">
                 <i className="bi bi-book me-2"></i>
-                Chương
+                Nội dung ôn tập
               </div>
               <select
                 id="select-2"
                 className="config-select"
-                value={quizConfig.chapter}
+                value={quizConfig.subChapter}
                 onChange={(e) =>
                   setQuizConfig({
                     ...quizConfig,
-                    chapter: e.target.value,
+                    subChapter: e.target.value,
                   })
                 }
               >
-                <option value="random">Random (Tất cả chương)</option>
-                {chapters.map((chapter) => (
-                  <option key={chapter} value={chapter}>
-                    Chương {chapter}
+                <option value="all">Tất cả các mục (Chương 4)</option>
+                {subChapters.map((subCh) => (
+                  <option key={subCh} value={subCh}>
+                    {subChapterNames[subCh] || `Mục ${subCh}`}
                   </option>
                 ))}
               </select>
