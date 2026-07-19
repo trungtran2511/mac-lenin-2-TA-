@@ -151,14 +151,25 @@ const Courses = () => {
         <p className="mb-0 fs-5">
           <i className="bi bi-lightbulb"></i> Nội dung bám theo Chương 4 - Giáo trình Kinh tế chính trị Mác - Lênin
         </p>
-        <a
-          className="download-textbook-btn"
-          href="/docs/giao-trinh-triet-hoc-mac-lenin.docx"
-          download
-        >
-          <i className="bi bi-download"></i>
-          Tải giáo trình
-        </a>
+        <div className="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+          <a
+            className="download-textbook-btn"
+            href="/docs/giao_trinh_full.pdf"
+            download="Giao trinh full.pdf"
+          >
+            <i className="bi bi-download"></i>
+            Tải giáo trình Full.pdf
+          </a>
+          <a
+            className="preview-textbook-btn"
+            href="/docs/giao_trinh_full.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i className="bi bi-eye"></i>
+            Xem trước PDF
+          </a>
+        </div>
       </div>
 
       {/* Topic Dropdown Selector */}

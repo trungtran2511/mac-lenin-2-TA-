@@ -212,7 +212,7 @@
   align-items: center;
   gap: 0.5rem;
   width: fit-content;
-  margin: 1rem auto 0;
+  margin: 1rem 0.5rem 0;
   border-radius: 14px;
   background: #007d84;
   color: #fff;
@@ -224,6 +224,28 @@
 }
 
 .download-textbook-btn:hover {
+  background: #172026;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.preview-textbook-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  margin: 1rem 0.5rem 0;
+  border-radius: 14px;
+  background: #f2b441;
+  color: #172026;
+  padding: 0.8rem 1.1rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 14px 30px rgba(242, 180, 65, 0.24);
+  transition: all 0.2s ease;
+}
+
+.preview-textbook-btn:hover {
   background: #172026;
   color: #fff;
   transform: translateY(-2px);
