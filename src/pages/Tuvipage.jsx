@@ -200,7 +200,7 @@ const TuviPage = () => {
       })
       .join("\n");
 
-    return `Bạn là chuyên gia tử vi Tử Vi Đẩu Số người Việt Nam với kiến thức sâu rộng. Hãy luận giải chi tiết lá số sau:
+    return `Bạn là chuyên gia tử vi Tử Vi Đẩu Số kết hợp cố vấn kinh tế và quản trị chiến lược doanh nghiệp/cá nhân. Hãy đóng vai trò là "Cố vấn Kinh tế & Quản trị rủi ro Cạnh tranh", sử dụng kiến thức Tử Vi và các lý thuyết kinh tế học trong "Chương 4: Cạnh tranh và độc quyền trong nền kinh tế thị trường" (Triết học Mác - Lênin) để phân tích, luận giải chi tiết lá số sau cho người xem là sinh viên hoặc người đi làm:
 
 **THÔNG TIN BÁT TỰ:**
 - Họ tên: ${tb.ten}
@@ -214,34 +214,27 @@ const TuviPage = () => {
 - Mệnh chủ: ${tb.menhChu}
 - Thân chủ: ${tb.thanChu}
 
-**12 CUNG VÀ SAO:**
+**12 CUNG VÀ SAO CHÍNH:**
 ${cungData}
 
-Hãy luận giải theo cấu trúc sau (viết bằng tiếng Việt, văn phong dễ hiểu, tích cực):
+Hãy luận giải theo đúng cấu trúc sau (viết bằng tiếng Việt, kết hợp khéo léo thuật ngữ tử vi và thuật ngữ kinh tế học Chương 4 như: quy luật giá trị, giá trị thặng dư, cạnh tranh tự do, độc quyền, lợi thế so sánh, trì trệ độc quyền, thị phần năng lực, v.v.):
 
-## 1. TỔNG QUAN VỀ SỐ MỆNH
-Phân tích tổng thể về cục, bản mệnh, mệnh chủ, thân chủ và ý nghĩa của chúng.
+## 1. TỔNG QUAN XU HƯỚNG CẠNH TRANH CỦA BẢN MỆNH
+Dựa trên Bản mệnh, Cục và các cung Mệnh/Thân, hãy phân tích xu hướng hành vi của người này trong môi trường làm việc: Họ có xu hướng năng động thích ứng cạnh tranh tự do (luôn cải tiến bản thân, học hỏi nhanh) hay có xu hướng xây dựng vị thế độc quyền riêng biệt (tập trung vào chuyên môn hóa sâu, nắm giữ bí quyết độc quyền để chiếm ưu thế)?
 
-## 2. TÍNH CÁCH VÀ VẬN MỆNH
-Dựa vào cung Mệnh và các sao chính để phân tích tính cách, điểm mạnh, điểm yếu.
+## 2. LỢI THẾ CẠNH TRANH TRÊN THỊ TRƯỜNG LAO ĐỘNG
+Dựa vào cung Mệnh và cung Quan Lộc (sự nghiệp), hãy phân tích "sức lao động" và "giá trị thặng dư" cá nhân. Đâu là "lợi thế so sánh" (vũ khí cạnh tranh cốt lõi) giúp người này chiếm lĩnh "thị phần" lớn trong ngành nghề của họ?
 
-## 3. SỰ NGHIỆP VÀ TÀI LỘC
-Phân tích cung Quan Lộc, Tài Bạch, và khả năng phát triển sự nghiệp.
+## 3. NHẬN DIỆN NGUY CƠ ĐỘC QUYỀN VÀ SỰ TRÌ TRỆ
+Dựa vào cung Tài Bạch (tài lộc) và cung Tật Ách (rủi ro/yếu điểm), hãy cảnh báo những thói quen hay điểm yếu có thể dẫn đến sự trì trệ độc quyền cá nhân (ví dụ: tự mãn khi đạt vị thế an toàn, bảo thủ không chịu đổi mới công nghệ bản thân, hoặc bị chèn ép bởi các thế lực độc quyền lớn hơn).
 
-## 4. TÌNH DUYÊN VÀ GIA ĐẠO
-Phân tích cung Phu Thê, Tử Tức về tình cảm, hôn nhân, con cái.
-
-## 5. SỨC KHỎE
-Phân tích cung Tật Ách về sức khỏe cần lưu ý.
-
-## 6. LỜI KHUYÊN VÀ HƯỚNG ĐI
-Đưa ra lời khuyên thiết thực để phát huy thế mạnh và hạn chế điểm yếu.
+## 4. CHIẾN LƯỢC TỐI ƯU HÓA LỢI NHUẬN & TÍCH LŨY CÁ NHÂN
+Đưa ra lời khuyên chiến lược cụ thể dựa trên Quy luật giá trị và Quy luật cạnh tranh của Chương 4. Làm thế nào để họ liên tục đổi mới, phát huy thế mạnh của lá số, vượt qua các rào cản độc quyền thị trường để tối đa hóa hiệu quả tích lũy tài sản và sự nghiệp vững chắc.
 
 Lưu ý: 
-- Viết văn phong tích cực, khuyến khích
-- Độ dài khoảng 1000-1200 từ
-- Sử dụng ngôn ngữ dễ hiểu, tránh quá huyền bí
-- Format rõ ràng với heading và paragraph`;
+- Viết văn phong chuyên nghiệp, vừa học thuật vừa thực tế, mang tính khuyến khích và hướng nghiệp cao.
+- Độ dài khoảng 1000-1200 từ.
+- Tránh các giải thích huyền bí mê tín dị đoan quá đà, tập trung liên kết với hành vi thực tế và tư duy kinh tế.`;
   };
 
   const createLocalLuanGiai = (
@@ -257,23 +250,17 @@ Lưu ý:
         .slice(0, 4)
         .join(", ") || "không có chính tinh nổi bật";
 
-    return `## 1. TỔNG QUAN VỀ SỐ MỆNH
-Lá số của ${tb.ten || "người xem"} có bản mệnh ${tb.banMenh || "chưa xác định"}, cục ${tb.tenCuc || "chưa xác định"}, mệnh chủ ${tb.menhChu || "chưa rõ"} và thân chủ ${tb.thanChu || "chưa rõ"}. Đây là bản luận giải cục bộ được tạo từ dữ liệu lá số trong ứng dụng vì ${reason}.
+    return `## 1. TỔNG QUAN XU HƯỚNG CẠNH TRANH CỦA BẢN MỆNH
+Lá số của ${tb.ten || "người xem"} có bản mệnh ${tb.banMenh || "chưa xác định"} và cục ${tb.tenCuc || "chưa xác định"}. Bản mệnh này cho thấy xu hướng hành vi mang tính thích ứng, sẵn sàng đối diện với sức ép cạnh tranh của thị trường lao động. Tuy nhiên, mức độ sẵn sàng cạnh tranh tự do hay hướng tới xây dựng rào cản độc quyền cá nhân phụ thuộc lớn vào việc tự rèn luyện kỹ năng cốt lõi. Đây là bản luận giải cục bộ vì lý do: ${reason}.
 
-## 2. TÍNH CÁCH VÀ VẬN MỆNH
-Cung Mệnh có các sao chính: ${topStars(findCung("Mệnh"))}. Người xem nên hiểu phần này như một gợi ý tham khảo: điểm mạnh nằm ở cách nhìn nhận bản thân, khả năng tự điều chỉnh và thái độ trước hoàn cảnh.
+## 2. LỢI THẾ CẠNH TRANH TRÊN THỊ TRƯỜNG LAO ĐỘNG
+Cung Mệnh có các sao chính: ${topStars(findCung("Mệnh"))}. Cung Quan Lộc sở hữu: ${topStars(findCung("Quan Lộc"))}. Sức lao động cá nhân của bạn chứa đựng những giá trị tiềm năng lớn. Để chiếm lĩnh "thị phần lao động", bạn cần cụ thể hóa lợi thế từ các sao này thành các kỹ năng thực tế chuyên sâu nhằm tạo ra năng suất vượt trội so với mức trung bình xã hội.
 
-## 3. SỰ NGHIỆP VÀ TÀI LỘC
-Cung Quan Lộc có: ${topStars(findCung("Quan Lộc"))}. Cung Tài Bạch có: ${topStars(findCung("Tài Bạch"))}. Khi xem sự nghiệp, nên kết hợp giữa định hướng cá nhân, môi trường học tập/làm việc và khả năng tích lũy từng giai đoạn.
+## 3. NHẬN DIỆN NGUY CƠ ĐỘC QUYỀN VÀ SỰ TRÌ TRỆ
+Cung Tài Bạch có: ${topStars(findCung("Tài Bạch"))}. Ở góc độ kinh tế học Chương 4, độc quyền không kiểm soát sẽ sinh ra sự trì trệ kỹ thuật và bảo thủ. Rủi ro của bạn là việc dễ bằng lòng với vị trí hiện tại hoặc thiếu chủ động học tập các công nghệ mới, dẫn đến việc hao hụt sức cạnh tranh trước những nhân sự trẻ trung, năng động hơn.
 
-## 4. TÌNH DUYÊN VÀ GIA ĐẠO
-Các cung tình cảm trong lá số nên được đọc theo hướng cân bằng: tôn trọng giao tiếp, giữ sự ổn định cảm xúc và tránh quyết định vội khi gặp mâu thuẫn.
-
-## 5. SỨC KHỎE
-Phần sức khỏe chỉ nên xem như nhắc nhở sinh hoạt: ngủ đủ, vận động đều, giữ lịch học/làm việc hợp lý và đi khám chuyên môn khi có dấu hiệu bất thường.
-
-## 6. LỜI KHUYÊN VÀ HƯỚNG ĐI
-Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. Khi Gemini khả dụng trở lại, bạn có thể bấm tạo luận giải để nhận bản phân tích AI dài và sâu hơn.`;
+## 4. CHIẾN LƯỢC TỐI ƯU HÓA LỢI NHUẬN & TÍCH LŨY CÁ NHÂN
+Bạn nên vận dụng Quy luật giá trị để liên tục tiết kiệm thời gian lao động cá biệt, gia tăng hàm lượng trí tuệ trong công việc. Thay vì trốn tránh cạnh tranh hoặc mong chờ một môi trường độc quyền bảo hộ, hãy chủ động liên kết, đổi mới phương thức làm việc và không ngừng nâng cấp bản thân để vượt qua các rào cản từ thị trường.`;
   };
 
   const isGeminiFallbackError = (message = "") => {
@@ -817,10 +804,10 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
           <div className="tuvi-reading-panel mt-4">
             <div className="tuvi-reading-header">
               <div>
-                <p className="tuvi-reading-kicker">Luận giải tự động</p>
+                <p className="tuvi-reading-kicker">Luận giải Cạnh tranh & Độc quyền (Chương 4)</p>
                 <h3>
-                  <i className="bi bi-arrow-through-heart-fill"></i>
-                  Chuyên gia phân tích lá số
+                  <i className="bi bi-briefcase-fill me-2"></i>
+                  Cố vấn Kinh tế & Năng lực Cạnh tranh
                 </h3>
               </div>
             </div>
@@ -828,14 +815,13 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
               {!luanGiai && !isAnalyzing && (
                 <div className="tuvi-reading-empty">
                   <p>
-                    Nhấn nút bên dưới để hệ thống phân tích và luận giải lá số
-                    của bạn theo từng nhóm nội dung.
+                    Nhấn nút bên dưới để AI phân tích lá số của bạn dưới góc nhìn cạnh tranh và độc quyền kinh tế của Chương 4.
                   </p>
                   <button
                     className="tuvi-reading-btn"
                     onClick={generateLuanGiai}
                   >
-                    <i className="bi bi-asterisk me-2"></i> Tạo luận giải
+                    <i className="bi bi-cpu me-2"></i> Tạo luận giải kinh tế
                   </button>
                 </div>
               )}
@@ -850,7 +836,7 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
                   </div>
                   <p>
                     <i className="bi bi-sparkles me-2"></i>
-                    AI đang phân tích lá số của bạn, vui lòng chờ...
+                    AI đang phân tích lá số và lập chiến lược cạnh tranh cho bạn, vui lòng chờ...
                   </p>
                 </div>
               )}
@@ -895,11 +881,8 @@ Lá số là công cụ tham khảo, không thay thế lựa chọn cá nhân. K
 
                   <div className="tuvi-reading-note">
                     <p>
-                      <i className="bi bi-music-note me-2"></i>
-                      <strong>Lưu ý:</strong> Luận giải này được tạo tự động bởi
-                      AI dựa trên lá số tử vi. Kết quả chỉ mang tính tham khảo,
-                      không thay thế cho tư vấn chuyên sâu từ thầy số có kinh
-                      nghiệm.
+                      <i className="bi bi-info-circle me-2"></i>
+                      <strong>Lưu ý:</strong> Luận giải này được tích hợp góc nhìn lý thuyết Chương 4 Triết học 2 và phân tích lá số bởi AI. Kết quả mang tính chất gợi ý định hướng học tập, sự nghiệp và tư duy kinh tế.
                     </p>
                   </div>
                 </div>
