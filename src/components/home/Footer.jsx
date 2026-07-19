@@ -10,7 +10,7 @@ const Footer = () => {
             {/* Left Column */}
             <div className="footer-brand">
               <h4 className="footer-logo">
-                Nhóm 2<sup>®</sup>
+                Nhóm 4<sup>®</sup>
               </h4>
               <p className="footer-tagline">
                 Không gian học tập Triết học Mác&nbsp;‑&nbsp;Lênin
@@ -123,7 +123,7 @@ const Footer = () => {
         <div className="footer-container">
           <div className="footer-bottom-inner">
             <span className="footer-copyright">
-              © 2026 Nhóm 2 — Website học tập Triết học Mác‑Lênin.
+              © 2026 Nhóm 4 — Website học tập Triết học Mác‑Lênin.
             </span>
             <div className="footer-bottom-links">
               {["Giới thiệu", "Bài học", "Liên hệ"].map((item) => (

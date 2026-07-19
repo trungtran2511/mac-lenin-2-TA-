@@ -75,7 +75,7 @@ const Header = () => {
                               <a
                                 href="/"
                                 className="brand-link"
-                                aria-label="Nhóm 2 - Học triết dễ hơn"
+                                aria-label="Nhóm 4 - Học triết dễ hơn"
                               >
                                 <img
                                   className="brand-icon is_svg"
@@ -84,7 +84,7 @@ const Header = () => {
                                   aria-hidden="true"
                                 />
                                 <span className="brand-text">
-                                  <strong>NHÓM 2</strong>
+                                  <strong>NHÓM 4</strong>
                                   <small>Học triết dễ hơn</small>
                                 </span>
                               </a>

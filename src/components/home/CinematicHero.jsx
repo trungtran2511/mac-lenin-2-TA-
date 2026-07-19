@@ -108,8 +108,8 @@ const CinematicHero = () => {
 
       {/* ── Navigation Bar ── */}
       <nav className="hero-navbar" role="navigation" aria-label="Main navigation">
-        <Link to="/" className="hero-logo" aria-label="Nhóm 2 - Trang chủ">
-          Nhóm 2<sup>®</sup>
+        <Link to="/" className="hero-logo" aria-label="Nhóm 4 - Trang chủ">
+          Nhóm 4<sup>®</sup>
         </Link>
 
         {/* Desktop Menu */}
@@ -174,7 +174,7 @@ const CinematicHero = () => {
 
         <p className="hero-description animate-fade-rise-delay">
           Không gian học tập Triết học 2 - Chương 4 (Cạnh tranh và độc quyền trong nền kinh tế thị trường) dành cho sinh viên
-          AI1901. Học theo chủ đề, ôn thi bằng 100 câu hỏi quiz, lật thẻ ghi nhớ và ôn tập thông minh.
+          SE1919. Học theo chủ đề, ôn thi bằng 100 câu hỏi quiz, lật thẻ ghi nhớ và ôn tập thông minh.
         </p>
 
         <Link to="/courses" className="hero-cta animate-fade-rise-delay-2">

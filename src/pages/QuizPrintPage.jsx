@@ -170,38 +170,38 @@ function QuizPrintPage() {
       {/* ===== QUESTION LIST ===== */}
       <div className="qp-list">
         {subChapters.map((sub) => {
-        const subQs = displayed.filter((q) => q.subChapter === sub);
-        if (!subQs.length) return null;
-        const title = subChapterTitles[sub] || `Mục ${sub}`;
-        return (
-          <section key={sub} className="qp-subchapter-section">
-            <h2 className="qp-subchapter-heading">
-              <span className="qp-subchapter-badge">{title}</span>
-            </h2>
-            <div className="qp-questions">
-              {subQs.map((q) => {
-                return (
-                  <article key={q.id} className="qp-card">
-                    <p className="qp-question">
-                      {q.question}
-                      <span className={`qp-diff qp-diff--${q.difficulty}`}>{DIFFICULTY_LABEL[q.difficulty] ?? ""}</span>
-                    </p>
-                    <ul className="qp-options">
-                      {q.options.map((opt, i) => (
-                        <li key={i} className={`qp-option ${showAnswers && i === q.correctAnswer ? 'qp-option--correct' : ''}`}>
-                          <span className="qp-opt-key">{ANSWER_LABELS[i]}.</span>
-                          <span className="qp-opt-text">{opt}</span>
-                          {showAnswers && i === q.correctAnswer && <span className="qp-correct-mark">✓</span>}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
-        );
-      })}
+          const subQs = displayed.filter((q) => q.subChapter === sub);
+          if (!subQs.length) return null;
+          const title = subChapterTitles[sub] || `Mục ${sub}`;
+          return (
+            <section key={sub} className="qp-subchapter-section">
+              <h2 className="qp-subchapter-heading">
+                <span className="qp-subchapter-badge">{title}</span>
+              </h2>
+              <div className="qp-questions">
+                {subQs.map((q) => {
+                  return (
+                    <article key={q.id} className="qp-card">
+                      <p className="qp-question">
+                        {q.question}
+                        <span className={`qp-diff qp-diff--${q.difficulty}`}>{DIFFICULTY_LABEL[q.difficulty] ?? ""}</span>
+                      </p>
+                      <ul className="qp-options">
+                        {q.options.map((opt, i) => (
+                          <li key={i} className={`qp-option ${showAnswers && i === q.correctAnswer ? 'qp-option--correct' : ''}`}>
+                            <span className="qp-opt-key">{ANSWER_LABELS[i]}.</span>
+                            <span className="qp-opt-text">{opt}</span>
+                            {showAnswers && i === q.correctAnswer && <span className="qp-correct-mark">✓</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
 
         {/* ===== PAGINATION ===== */}
         {totalPages > 1 && !isPrinting && (
@@ -266,7 +266,7 @@ function QuizPrintPage() {
 
       {/* ===== PRINT FOOTER ===== */}
       <div className="qp-print-footer print-only">
-        <p>Nhóm 2 — Không gian học Triết học 2 (Chương 4)</p>
+        <p>Nhóm 4 — Không gian học Triết học 2 (Chương 4)</p>
       </div>
 
       {/* ===== STYLES ===== */}

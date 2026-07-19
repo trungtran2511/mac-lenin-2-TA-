@@ -8,7 +8,7 @@ const GREETINGS = [
   "Biện chứng hay duy vật? 🧠",
   "Đang ôn Triết à? 📚",
   "Vũ trụ đang quay... 🌌",
-  "Nhóm 2 xin chào! 👋",
+  "Nhóm 4 xin chào! 👋",
   "Học bài thôi nào! ✨",
 ];
 

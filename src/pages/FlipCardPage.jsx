@@ -550,7 +550,7 @@ export default function FlipCardPage() {
           </div>
 
           <footer className="footer-wrapper">
-            &copy; Copyright {new Date().getFullYear()} Group2-AI1901. All
+            &copy; Copyright {new Date().getFullYear()} Group4-SE1919. All
             rights reserved.
           </footer>
 
