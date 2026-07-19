@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import $ from "jquery";
 import "../styles/flip/flip.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -64,6 +64,96 @@ const matcherPool = [
     text: "Nhà nước ban hành các đạo luật chống độc quyền độc chiếm, áp đặt trần giá bán điện hoặc điều tiết hoạt động của các tập đoàn tư nhân khổng lồ.",
     answer: "Độc quyền Nhà nước",
     ex: "Nhà nước sử dụng pháp luật để điều tiết kinh tế vĩ mô, xoa dịu mâu thuẫn xã hội có lợi cho chế độ độc quyền."
+  },
+  {
+    text: "Thỏa thuận ngầm của các nước xuất khẩu dầu mỏ nhằm hạn chế nguồn cung và giữ giá bán dầu thô ở mức cao trên thị trường thế giới.",
+    answer: "Các-ten",
+    ex: "OPEC hoạt động như một dạng Các-ten (Cartel) quốc tế, nơi các quốc gia độc lập cùng thỏa thuận định giá và sản lượng."
+  },
+  {
+    text: "Ba nhà cung cấp mạng viễn thông lớn ký cam kết không hạ giá cước thuê bao tháng dưới mức sàn tối thiểu đã thống nhất.",
+    answer: "Các-ten",
+    ex: "Cam kết giữ mức giá sàn chung là hành vi thỏa hiệp giá của Các-ten thương mại."
+  },
+  {
+    text: "Các hãng sản xuất pin mặt trời ký thỏa thuận phân bổ hạn ngạch xuất khẩu sang thị trường Châu Âu để giữ tính ổn định giá bán lẻ.",
+    answer: "Các-ten",
+    ex: "Các-ten thỏa thuận chia nhỏ thị phần hoặc hạn ngạch để tránh cạnh tranh trực diện giữa các thành viên."
+  },
+  {
+    text: "Năm nhà máy đường lớn thành lập một đầu mối bán hàng duy nhất chuyên ký hợp đồng tiêu thụ sản phẩm cho cả liên minh.",
+    answer: "Xanh-đi-ca",
+    ex: "Xanh-đi-ca (Syndicate) tước bỏ quyền tự chủ thương mại của thành viên bằng cách lập đầu mối phân phối chung."
+  },
+  {
+    text: "Các lò khai thác than cam kết toàn bộ sản lượng khai thác phải bán trực tiếp cho văn phòng đại diện chung để điều phối giá cả thống nhất.",
+    answer: "Xanh-đi-ca",
+    ex: "Mọi hoạt động lưu thông hàng hóa của thành viên Xanh-đi-ca đều qua văn phòng điều phối chung để tối ưu hóa giá."
+  },
+  {
+    text: "Các công ty chăn nuôi thỏa thuận chỉ mua thức ăn gia súc từ một tổng đại lý duy nhất đại diện cho liên minh để ép giá nhà sản xuất cám.",
+    answer: "Xanh-đi-ca",
+    ex: "Xanh-đi-ca thu mua nguyên liệu tập trung giúp tạo sức ép mua với giá rẻ nhất từ các bên cung ứng."
+  },
+  {
+    text: "Tập đoàn Standard Oil mua đứt cổ phần chi phối của các đối thủ cạnh tranh ngành lọc dầu và đưa tất cả về chung một ban lãnh đạo tối cao.",
+    answer: "Tờ-rớt",
+    ex: "Tờ-rớt (Trust) sáp nhập các thực thể độc lập thành một tổ chức duy nhất dưới sự điều hành tối cao của một hội đồng."
+  },
+  {
+    text: "Ba nhà máy cơ khí chế tạo bàn giao quyền quản trị tài sản và nhà xưởng cho một Hội đồng ủy thác chung, các chủ xí nghiệp cũ chỉ nhận cổ tức.",
+    answer: "Tờ-rớt",
+    ex: "Khi tham gia Tờ-rớt, các xí nghiệp mất hoàn toàn độc lập về sản xuất lẫn thương mại và chuyển thành cổ đông nhận cổ tức."
+  },
+  {
+    text: "Hợp nhất hoàn toàn hệ thống thương hiệu, dây chuyền lắp ráp và nhân sự của các hãng sản xuất ô tô thành một tổng công ty thống nhất.",
+    answer: "Tờ-rớt",
+    ex: "Hợp nhất toàn diện các nguồn lực dưới một pháp nhân duy nhất là hình thức phát triển cao của Tờ-rớt sản xuất."
+  },
+  {
+    text: "Tập đoàn công nghiệp nặng kết hợp ngân hàng lớn và công ty vận tải biển để tạo thành một tổ hợp độc quyền kiểm soát chuỗi giá trị đa ngành dọc.",
+    answer: "Công-soóc-xi-om",
+    ex: "Công-soóc-xi-om (Consortium) là liên kết đa ngành khổng lồ từ sản xuất đến tài chính, vận tải nhằm tối ưu hóa lợi nhuận."
+  },
+  {
+    text: "Tổ chức tài chính ngân hàng đầu tư kết hợp các công ty viễn thông, sản xuất vũ khí, khai mỏ thành một mạng lưới tài phiệt đa quốc gia.",
+    answer: "Công-soóc-xi-om",
+    ex: "Sự thâm nhập chéo giữa tư bản công nghiệp và tư bản ngân hàng tạo thành giới tài phiệt vận hành Công-soóc-xi-om."
+  },
+  {
+    text: "Siêu liên minh đa ngành khổng lồ chi phối từ các xí nghiệp nông nghiệp, chuỗi siêu thị bán lẻ cho tới ngân hàng thương mại cung ứng tín dụng.",
+    answer: "Công-soóc-xi-om",
+    ex: "Mô hình đa ngành khép kín kết hợp tài chính làm hạt nhân điều hành là đặc trưng của Công-soóc-xi-om."
+  },
+  {
+    text: "Chính phủ sở hữu và vận hành độc quyền toàn bộ mạng lưới truyền tải điện cao thế 500kV để bảo đảm an ninh năng lượng quốc gia.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Nhà nước trực tiếp sở hữu và vận hành các ngành xương sống của nền kinh tế quốc gia."
+  },
+  {
+    text: "Nhà nước quy định duy nhất một tổng công ty thuộc Bộ Quốc phòng được phép sản xuất và cung ứng các trang thiết bị quân sự.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Các lĩnh vực đặc thù liên quan đến an ninh quốc gia thường do Nhà nước độc quyền kiểm soát tuyệt đối."
+  },
+  {
+    text: "Ngân hàng Trung ương độc quyền in và phát hành tiền pháp định, kiểm soát dòng tiền tệ vĩ mô toàn bộ nền kinh tế quốc gia.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Phát hành tiền tệ là quyền độc quyền kinh tế tối cao của Nhà nước để quản lý vĩ mô."
+  },
+  {
+    text: "Hãng sản xuất điện thoại thông minh sáp nhập toàn bộ mỏ khai thác đất hiếm, nhà máy bán dẫn và hệ thống cửa hàng phân phối trên toàn cầu.",
+    answer: "Công-soóc-xi-om",
+    ex: "Sự bành trướng đa lĩnh vực, kết nối chuỗi cung ứng dọc với nguồn vốn ngân hàng khổng lồ tạo nên Công-soóc-xi-om tài phiệt."
+  },
+  {
+    text: "Năm công ty thép cam kết giữ nguyên tỷ lệ sản xuất thép hình hằng năm của mỗi bên để giữ giá thép trong nước không bị giảm.",
+    answer: "Các-ten",
+    ex: "Giới hạn sản lượng sản xuất của mỗi thành viên là cách Các-ten ngăn chặn tình trạng dư thừa hàng hóa gây tụt giá."
+  },
+  {
+    text: "Nhà nước chi hàng tỷ USD từ ngân sách quốc gia để giải cứu một tập đoàn dầu khí nhà nước đang trên bờ vực vỡ nợ.",
+    answer: "Độc quyền Nhà nước",
+    ex: "Sử dụng tiền thuế của dân để hỗ trợ, bù lỗ hoặc cứu các thực thể kinh tế nhà nước phản ánh tính chất độc quyền nhà nước."
   }
 ];
 
@@ -82,12 +172,20 @@ export default function FlipCardPage() {
 
   // --- MONOPOLY MATCHER STATE ---
   const [matcherScore, setMatcherScore] = useState(0);
+  const matcherScoreRef = useRef(0);
+  useEffect(() => {
+    matcherScoreRef.current = matcherScore;
+  }, [matcherScore]);
   const [matcherTimeLeft, setMatcherTimeLeft] = useState(60);
   const [matcherState, setMatcherState] = useState("intro"); // 'intro', 'playing', 'ended'
   const [matcherQuestions, setMatcherQuestions] = useState([]);
   const [matcherCurrentIndex, setMatcherCurrentIndex] = useState(0);
   const [matcherFeedback, setMatcherFeedback] = useState(null);
   const [fallingWords, setFallingWords] = useState([]);
+  const [matcherResults, setMatcherResults] = useState([]); // Track answers
+  const [showAnswerKey, setShowAnswerKey] = useState(false);
+  const [answerKeyPassword, setAnswerKeyPassword] = useState("");
+  const [answerKeyUnlocked, setAnswerKeyUnlocked] = useState(false);
   const [matcherHighScore, setMatcherHighScore] = useState(() => {
     return parseInt(localStorage.getItem("matcher_highscore")) || 0;
   });
@@ -458,12 +556,22 @@ export default function FlipCardPage() {
     };
   }, [activeTab, matcherState]);
 
-  // --- MONOPOLY MATCHER SPAWN TRIGGERS ---
+  // --- CONTINUOUS SPAWN: Every 3 seconds, spawn a new batch ---
   useEffect(() => {
-    if (activeTab === "matcher" && matcherState === "playing" && matcherQuestions.length > 0) {
+    if (activeTab !== "matcher" || matcherState !== "playing" || matcherQuestions.length === 0) return;
+    spawnFallingWords();
+    const spawnInterval = setInterval(() => {
       spawnFallingWords();
-    }
-  }, [matcherCurrentIndex, matcherState, matcherQuestions]);
+    }, 4500);
+    return () => clearInterval(spawnInterval);
+  }, [matcherState, matcherQuestions]);
+
+  // --- AUTO-CLEAR TOAST FEEDBACK ---
+  useEffect(() => {
+    if (!matcherFeedback) return;
+    const t = setTimeout(() => setMatcherFeedback(null), 1500);
+    return () => clearTimeout(t);
+  }, [matcherFeedback]);
 
   const startMatcherGame = () => {
     const shuffled = [...matcherPool].sort(() => Math.random() - 0.5);
@@ -472,105 +580,111 @@ export default function FlipCardPage() {
     setMatcherTimeLeft(60);
     setMatcherCurrentIndex(0);
     setMatcherFeedback(null);
+    setFallingWords([]);
+    setMatcherResults([]);
     setMatcherState("playing");
   };
 
   const spawnFallingWords = () => {
-    const categories = ["Các-ten", "Xanh-đi-ca", "Tờ-rớt", "Công-soóc-xi-om", "Độc quyền Nhà nước"];
-    
-    // Shuffle channels to prevent words from falling in the same vertical column
-    const channels = [8, 26, 44, 62, 80].sort(() => Math.random() - 0.5);
-    
-    // Spawn delays to spread the falling elements over time
-    const delays = [0, 0.8, 1.6, 2.4, 3.2].sort(() => Math.random() - 0.5);
-    
-    const words = categories.map((cat, index) => {
-      const duration = 5.0 + Math.random() * 1.5; // Random fall duration (5s - 6.5s)
+    const baseCategories = ["Các-ten", "Xanh-đi-ca", "Tờ-rớt", "Công-soóc-xi-om", "Độc quyền Nhà nước"];
+    const extraCategories = [...baseCategories].sort(() => Math.random() - 0.5).slice(0, 2);
+    const categories = [...baseCategories, ...extraCategories];
+    const channels = [4, 16, 28, 40, 52, 64, 76].sort(() => Math.random() - 0.5);
+    const delays = [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8].sort(() => Math.random() - 0.5);
+    const newWords = categories.map((cat, index) => {
+      const duration = 6 + Math.random() * 2;
       return {
-        id: `${cat}-${Date.now()}-${index}`,
+        id: `${cat}-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 6)}`,
         text: cat,
         x: channels[index],
         delay: delays[index],
         duration: duration
       };
     });
-    
-    setFallingWords(words);
+    setFallingWords((prev) => [...prev, ...newWords]);
   };
 
   const endMatcherGame = (finalScore = null) => {
     setMatcherState("ended");
     setFallingWords([]);
-    const scoreToSave = finalScore !== null ? finalScore : matcherScore;
+    setMatcherFeedback(null);
+    const scoreToSave = finalScore !== null ? finalScore : matcherScoreRef.current;
 
     if (scoreToSave > matcherHighScore) {
       setMatcherHighScore(scoreToSave);
       localStorage.setItem("matcher_highscore", scoreToSave);
     }
 
+    const dateTime = new Date().toLocaleString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    });
+
     const newHistory = [
-      { score: scoreToSave, date: new Date().toLocaleDateString("vi-VN") },
+      { score: scoreToSave, date: dateTime },
       ...matcherHistory
     ].slice(0, 5);
     setMatcherHistory(newHistory);
     localStorage.setItem("matcher_history", JSON.stringify(newHistory));
   };
 
-  const handleWordClick = (word) => {
-    if (matcherFeedback) return;
+  const advanceQuestion = () => {
+    if (matcherCurrentIndex < matcherQuestions.length - 1) {
+      setMatcherCurrentIndex((prev) => prev + 1);
+    } else {
+      const reshuffled = [...matcherPool].sort(() => Math.random() - 0.5);
+      setMatcherQuestions(reshuffled);
+      setMatcherCurrentIndex(0);
+    }
+  };
 
+  const handleWordClick = (word) => {
     const currentQuestion = matcherQuestions[matcherCurrentIndex];
     const isCorrect = word.text === currentQuestion.answer;
 
+    // Track this result
+    setMatcherResults((prev) => [...prev, {
+      question: currentQuestion.text,
+      correctAnswer: currentQuestion.answer,
+      userAnswer: word.text,
+      isCorrect,
+      explanation: currentQuestion.ex
+    }]);
+
     let newScore = matcherScore;
     if (isCorrect) {
-      newScore += 10;
+      newScore = matcherScore + 10;
       setMatcherScore(newScore);
-      setMatcherFeedback({
-        type: "success",
-        message: "Chính xác! +10 điểm 🎉",
-        explanation: currentQuestion.ex
-      });
-      setFallingWords([]); // Clear remaining falling words immediately
+    }
+
+    // Remove clicked bubble
+    setFallingWords((prev) => prev.filter((w) => w.id !== word.id));
+
+    // Check if 30 questions reached
+    if (matcherResults.length + 1 >= 30) {
+      endMatcherGame(newScore);
     } else {
-      newScore = Math.max(0, newScore - 5);
-      setMatcherScore(newScore);
-      setMatcherFeedback({
-        type: "error",
-        message: `Sai rồi! -5 điểm (Bạn chọn: ${word.text}) ❌`,
-        explanation: `Đáp án đúng là: ${currentQuestion.answer}. ${currentQuestion.ex}`
-      });
-      // Remove only this wrong word bubble
-      setFallingWords((prev) => prev.filter((w) => w.id !== word.id));
+      advanceQuestion();
     }
   };
 
   const handleWordAnimationEnd = (word) => {
-    if (matcherFeedback) return; // Ignore if feedback is already showing
-
-    const currentQuestion = matcherQuestions[matcherCurrentIndex];
-    if (word.text === currentQuestion.answer) {
-      // Missed the correct answer!
-      const newScore = Math.max(0, matcherScore - 5);
-      setMatcherScore(newScore);
-      setMatcherFeedback({
-        type: "error",
-        message: "Bạn đã bỏ lỡ đáp án đúng! -5 điểm ⚠️",
-        explanation: `Đáp án đúng là: ${currentQuestion.answer}. ${currentQuestion.ex}`
-      });
-      setFallingWords([]); // Clear words immediately
-    } else {
-      // If a wrong answer bubble reaches the bottom, just filter it out
-      setFallingWords((prev) => prev.filter((w) => w.id !== word.id));
-    }
+    setFallingWords((prev) => prev.filter((w) => w.id !== word.id));
   };
 
   const handleNextQuestion = () => {
     setMatcherFeedback(null);
-    if (matcherCurrentIndex < matcherQuestions.length - 1) {
-      setMatcherCurrentIndex((prev) => prev + 1);
+    advanceQuestion();
+  };
+
+  const handleAnswerKeyCheck = () => {
+    if (answerKeyPassword === "1234567A") {
+      setAnswerKeyUnlocked(true);
     } else {
-      endMatcherGame();
+      alert("Sai mật khẩu!");
     }
   };
 
@@ -750,29 +864,21 @@ export default function FlipCardPage() {
       ) : (
         /* MONOPOLY MATCHER GAME VIEW */
         <div className="matcher-game-outer">
-          {/* HEADER STATS */}
-          <div className="matcher-header-stats">
-            <div className="matcher-stat-item">
-              <span className="matcher-stat-label">Điểm</span>
-              <span className="matcher-stat-value">{matcherScore}</span>
-            </div>
-            <div className="matcher-stat-item">
-              <span className="matcher-stat-label">Thời gian</span>
-              <span className="matcher-stat-value">{matcherTimeLeft}s</span>
-            </div>
-            <div className="matcher-stat-item">
-              <span className="matcher-stat-label">Kỷ lục</span>
-              <span className="matcher-stat-value">{matcherHighScore}</span>
-            </div>
-          </div>
-
-          {/* TIMER PROGRESS BAR */}
-          {matcherState === "playing" && (
-            <div className="matcher-timer-container">
-              <div
-                className="matcher-timer-fill"
-                style={{ width: `${(matcherTimeLeft / 60) * 100}%` }}
-              ></div>
+          {/* HEADER STATS (ONLY SHOW IN INTRO/ENDED STATE) */}
+          {matcherState !== "playing" && (
+            <div className="matcher-header-stats">
+              <div className="matcher-stat-item">
+                <span className="matcher-stat-label">Điểm</span>
+                <span className="matcher-stat-value">{matcherScore}</span>
+              </div>
+              <div className="matcher-stat-item">
+                <span className="matcher-stat-label">Thời gian</span>
+                <span className="matcher-stat-value">{matcherTimeLeft}s</span>
+              </div>
+              <div className="matcher-stat-item">
+                <span className="matcher-stat-label">Kỷ lục</span>
+                <span className="matcher-stat-value">{matcherHighScore}</span>
+              </div>
             </div>
           )}
 
@@ -783,143 +889,277 @@ export default function FlipCardPage() {
               <span className="matcher-question-counter">Minigame</span>
               <h2 className="matcher-title-large">PHÂN LOẠI TÀI PHIỆT</h2>
               <p className="matcher-intro-copy">
-                Các định nghĩa hoặc ví dụ thực tế liên quan đến các mô hình độc quyền của <strong>Chương 4 (Triết học Mác - Lênin)</strong> sẽ xuất hiện ở phía dưới.
-                Nhiệm vụ của bạn là click chọn đúng đáp án tương ứng đang rơi từ trên xuống trước khi hết thời gian!
+                Các định nghĩa hoặc ví dụ thực tế liên quan đến các mô hình độc quyền của <strong>Chương 4 (Triết học Mác - Lênin)</strong> sẽ xuất hiện ở phía bên phải.
+                Nhiệm vụ của bạn là click chọn đúng đáp án tương ứng đang rơi từ trên xuống ở khung bên trái trước khi hết thời gian!
               </p>
-              <button
-                type="button"
-                className="matcher-btn-primary"
-                onClick={startMatcherGame}
-              >
-                Bắt đầu ngay
-              </button>
-            </div>
-          )}
-
-          {matcherState === "playing" && (
-            <>
-              {/* FALLING ZONE (TOP/MIDDLE) */}
-              <div className="matcher-falling-zone">
-                <div className="matcher-channel-line" style={{ left: "15%" }}></div>
-                <div className="matcher-channel-line" style={{ left: "33%" }}></div>
-                <div className="matcher-channel-line" style={{ left: "51%" }}></div>
-                <div className="matcher-channel-line" style={{ left: "69%" }}></div>
-                <div className="matcher-channel-line" style={{ left: "87%" }}></div>
-
-                {/* SPAWN FALLING BUBBLES */}
-                {fallingWords.map((word) => (
-                  <div
-                    key={word.id}
-                    className={`falling-word-bubble ${categoryMap[word.text]}`}
-                    style={{
-                      left: `${word.x}%`,
-                      animationDelay: `${word.delay}s`,
-                      animationDuration: `${word.duration}s`,
-                      animationPlayState: matcherFeedback ? "paused" : "running"
-                    }}
-                    onClick={() => handleWordClick(word)}
-                    onAnimationEnd={() => handleWordAnimationEnd(word)}
-                  >
-                    <span className="bubble-glow-dot"></span>
-                    {word.text}
-                  </div>
-                ))}
-
-                {/* FEEDBACK OVERLAY */}
-                {matcherFeedback && (
-                  <div className={`matcher-feedback-overlay ${matcherFeedback.type}`}>
-                    <h3 className="matcher-feedback-title">
-                      {matcherFeedback.type === "success" ? (
-                        <>
-                          <i className="bi bi-check-circle-fill me-2"></i>
-                          {matcherFeedback.message}
-                        </>
-                      ) : (
-                        <>
-                          <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                          {matcherFeedback.message}
-                        </>
-                      )}
-                    </h3>
-                    <p className="matcher-feedback-explanation">
-                      {matcherFeedback.explanation}
-                    </p>
-                    <button
-                      type="button"
-                      className="matcher-next-btn"
-                      onClick={handleNextQuestion}
-                    >
-                      Tiếp tục
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* QUESTION CARD (BOTTOM) */}
-              {matcherQuestions.length > 0 && (
-                <div className="matcher-question-card-bottom">
-                  <span className="matcher-question-counter">
-                    Câu hỏi {matcherCurrentIndex + 1} / {matcherQuestions.length}
-                  </span>
-                  <p className="matcher-question-text">
-                    "{matcherQuestions[matcherCurrentIndex].text}"
-                  </p>
-                  <div className="matcher-question-help">
-                    <i className="bi bi-arrow-down-short animate-bounce"></i>
-                    Nhấp chọn đáp án đúng đang rơi phía trên!
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-
-          {matcherState === "ended" && (
-            <div className="matcher-card">
-              <div className="matcher-card-glow"></div>
-              <span className="matcher-question-counter">Hoàn thành</span>
-              <h2 className="matcher-title-large">KẾT THÚC VÁN ĐẤU</h2>
-              
-              <div className="matcher-ended-summary">
-                <p className="matcher-intro-copy">
-                  Bạn đã đạt được <strong>{matcherScore}</strong> điểm!
-                  {matcherScore >= matcherHighScore && matcherScore > 0 ? (
-                    <span style={{ display: "block", color: "#4caf50", fontWeight: "bold", marginTop: "0.5rem" }}>
-                      🎉 KỶ LỤC MỚI CỦA BẠN!
-                    </span>
-                  ) : null}
-                </p>
-
+              <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginTop: "1rem" }}>
                 <button
                   type="button"
                   className="matcher-btn-primary"
                   onClick={startMatcherGame}
                 >
-                  Chơi lại
+                  Bắt đầu ngay
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAnswerKey(true)}
+                  style={{
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    color: "#fff",
+                    padding: "0.75rem 2rem",
+                    borderRadius: "9999px",
+                    fontWeight: "bold",
+                    fontSize: "1.1rem",
+                    lineHeight: "1.5",
+                    cursor: "pointer"
+                  }}
+                >
+                  Xem đáp án
+                </button>
+              </div>
 
-                {/* HISTORY LEADERBOARD */}
-                {matcherHistory.length > 0 && (
-                  <div className="matcher-history-section">
-                    <h3 className="matcher-history-title">Lịch sử lượt chơi gần đây</h3>
-                    <table className="matcher-history-table">
-                      <thead>
-                        <tr>
-                          <th>Ngày chơi</th>
-                          <th>Điểm đạt được</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {matcherHistory.map((item, idx) => (
-                          <tr key={idx}>
-                            <td>{item.date}</td>
-                            <td>{item.score} điểm</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+
+            </div>
+          )}
+
+          {matcherState === "playing" && (
+            <div className="matcher-dashboard-grid">
+              {/* LEFT COLUMN: FALLING ZONE (60% width) */}
+              <div className="matcher-left-col">
+                <div className="matcher-falling-zone-fullscreen">
+                  {/* Cyber grid and matrix glows */}
+                  <div className="matcher-falling-matrix-grid"></div>
+                  
+                  {/* Channels */}
+                  <div className="matcher-channel-line" style={{ left: "10%" }}></div>
+                  <div className="matcher-channel-line" style={{ left: "28%" }}></div>
+                  <div className="matcher-channel-line" style={{ left: "46%" }}></div>
+                  <div className="matcher-channel-line" style={{ left: "64%" }}></div>
+                  <div className="matcher-channel-line" style={{ left: "82%" }}></div>
+
+                  {/* SPAWN FALLING BUBBLES */}
+                  {fallingWords.map((word) => (
+                    <div
+                      key={word.id}
+                      className={`falling-word-bubble ${categoryMap[word.text]}`}
+                      style={{
+                        left: `${word.x}%`,
+                        animationDelay: `${word.delay}s`,
+                        animationDuration: `${word.duration}s`,
+                        animationPlayState: "running"
+                      }}
+                      onPointerDown={(e) => {
+                        e.preventDefault(); // Prevent text selection/drag on click
+                        handleWordClick(word);
+                      }}
+                      onAnimationEnd={() => handleWordAnimationEnd(word)}
+                    >
+                      <span className="bubble-glow-dot"></span>
+                      {word.text}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: ACTIVE QUESTION CARD & STATS (40% width) */}
+              <div className="matcher-right-col">
+                <div className="matcher-side-panel">
+                  <div className="matcher-panel-header">
+                    <span className="matcher-panel-title">BẢNG PHÂN TÍCH</span>
+                    <div className="matcher-panel-neon-line"></div>
                   </div>
+
+                  {/* Stats list */}
+                  <div className="matcher-stats-vertical">
+                    <div className="matcher-stat-card blue">
+                      <span className="matcher-stat-lbl">ĐIỂM SỐ</span>
+                      <span className="matcher-stat-val glow-blue">{matcherScore}</span>
+                    </div>
+                    <div className="matcher-stat-card cyan">
+                      <span className="matcher-stat-lbl">THỜI GIAN MÀN CHƠI</span>
+                      <span className="matcher-stat-val glow-cyan">{matcherTimeLeft}s</span>
+                    </div>
+                    <div className="matcher-stat-card purple">
+                      <span className="matcher-stat-lbl">KỶ LỤC</span>
+                      <span className="matcher-stat-val glow-purple">{matcherHighScore}</span>
+                    </div>
+                  </div>
+
+                  {/* Active Question Box */}
+                  {matcherQuestions.length > 0 && (
+                    <div className="matcher-question-panel-card">
+                      <div className="matcher-question-badge">
+                        CÂU HỎI {matcherCurrentIndex + 1} / {matcherQuestions.length}
+                      </div>
+                      <div className="matcher-question-body-text">
+                        "{matcherQuestions[matcherCurrentIndex].text}"
+                      </div>
+                      <div className="matcher-question-hint">
+                        <i className="bi bi-arrow-left-short animate-bounce-horizontal"></i>
+                        Click chọn bong bóng đáp án đang rơi bên trái!
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Timer Progress Bar */}
+                  <div className="matcher-progress-panel">
+                    <div className="matcher-progress-title">NĂNG LƯỢNG HỆ THỐNG</div>
+                    <div className="matcher-progress-bar-glow">
+                      <div
+                        className="matcher-progress-bar-fill"
+                        style={{ width: `${(matcherTimeLeft / 60) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {matcherState === "ended" && (
+            <div className="matcher-dashboard-grid" style={{ alignItems: "start", gridTemplateColumns: "4fr 6fr" }}>
+              {/* LEFT SIDE: SCORE, BUTTON, HISTORY */}
+              <div className="matcher-card" style={{ height: "auto", justifyContent: "flex-start", maxWidth: "100%" }}>
+                <div className="matcher-card-glow"></div>
+                <span className="matcher-question-counter">Hoàn thành</span>
+                <h2 className="matcher-title-large">KẾT THÚC VÁN ĐẤU</h2>
+                
+                <div className="matcher-ended-summary" style={{ maxHeight: "40vh", overflowY: "auto", width: "100%", paddingRight: "0.5rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <p className="matcher-intro-copy">
+                    Bạn đã đạt được <strong>{matcherScore}</strong> điểm!
+                    {matcherScore >= matcherHighScore && matcherScore > 0 ? (
+                      <span style={{ display: "block", color: "#4caf50", fontWeight: "bold", marginTop: "0.5rem" }}>
+                        🎉 KỶ LỤC MỚI CỦA BẠN!
+                      </span>
+                    ) : null}
+                  </p>
+
+                  <button
+                    type="button"
+                    className="matcher-btn-primary"
+                    onClick={startMatcherGame}
+                  >
+                    Chơi lại
+                  </button>
+
+                  {/* HISTORY LEADERBOARD */}
+                  {matcherHistory.length > 0 && (
+                    <div className="matcher-history-section" style={{ marginTop: "2rem" }}>
+                      <h3 className="matcher-history-title">Lịch sử lượt chơi gần đây</h3>
+                      <table className="matcher-history-table">
+                        <thead>
+                          <tr>
+                            <th>Thời gian</th>
+                            <th>Điểm đạt được</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {matcherHistory.map((item, idx) => (
+                            <tr key={idx}>
+                              <td>{item.date}</td>
+                              <td>{item.score} điểm</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* RIGHT SIDE: DETAILED RESULTS */}
+              <div className="matcher-card" style={{ height: "auto", justifyContent: "flex-start", maxWidth: "100%" }}>
+                <h2 className="matcher-title-large" style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>CHI TIẾT KẾT QUẢ</h2>
+                {matcherResults.length > 0 ? (
+                  <div style={{ textAlign: "left", width: "100%", maxHeight: "50vh", overflowY: "auto", paddingRight: "0.5rem" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      {matcherResults.map((res, idx) => (
+                        <div key={idx} style={{ padding: "1rem", background: "rgba(255,255,255,0.05)", borderRadius: "8px", borderLeft: `4px solid ${res.isCorrect ? "#4caf50" : "#f44336"}` }}>
+                          <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.95rem" }}>{res.question}</p>
+                          <div style={{ display: "flex", gap: "1rem", fontSize: "0.85rem" }}>
+                            <span style={{ color: res.isCorrect ? "#4caf50" : "#f44336" }}>
+                              <strong>Bạn chọn:</strong> {res.userAnswer}
+                            </span>
+                            {!res.isCorrect && (
+                              <span style={{ color: "#4caf50" }}>
+                                <strong>Đáp án đúng:</strong> {res.correctAnswer}
+                              </span>
+                            )}
+                          </div>
+                          <p style={{ margin: "0.5rem 0 0 0", fontSize: "0.85rem", color: "rgba(255,255,255,0.7)" }}>
+                            <em>Giải thích: {res.explanation}</em>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p>Bạn chưa trả lời câu nào!</p>
                 )}
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* FULLSCREEN ANSWER KEY MODAL */}
+      {showAnswerKey && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%", 
+          background: "#0f172a", zIndex: 99999, display: "flex", 
+          flexDirection: "column",
+          fontSize: "1rem", lineHeight: "1.5",
+          color: "#fff",
+          overflowY: "auto",
+          padding: "2rem"
+        }}>
+          {/* CLOSE BUTTON (X) TOP LEFT */}
+          <button 
+            type="button"
+            onClick={(e) => { e.preventDefault(); setShowAnswerKey(false); setAnswerKeyUnlocked(false); setAnswerKeyPassword(""); }} 
+            style={{
+              position: "absolute", top: "1.5rem", left: "1.5rem",
+              background: "transparent", color: "#fff", border: "none",
+              fontSize: "3rem", cursor: "pointer", lineHeight: 1,
+              padding: "0.5rem"
+            }}
+          >
+            &times;
+          </button>
+
+          {!answerKeyUnlocked ? (
+            <div style={{ margin: "auto", textAlign: "center", background: "rgba(255,255,255,0.05)", padding: "3rem", borderRadius: "16px", border: "1px solid rgba(0, 180, 216, 0.3)" }}>
+              <h3 style={{ marginBottom: "1.5rem", fontSize: "1.8rem", color: "#fff" }}>Nhập mật khẩu để xem</h3>
+              <input 
+                type="password" 
+                value={answerKeyPassword}
+                onChange={(e) => setAnswerKeyPassword(e.target.value)}
+                style={{ padding: "0.75rem", borderRadius: "8px", border: "none", width: "250px", outline: "none", color: "#000", fontSize: "1.1rem" }}
+              />
+              <div style={{ marginTop: "1.5rem", display: "flex", gap: "1rem", justifyContent: "center" }}>
+                <button type="button" onClick={(e) => { e.preventDefault(); handleAnswerKeyCheck(); }} style={{ padding: "0.75rem 1.5rem", background: "#00b4d8", color: "#fff", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1.1rem" }}>Xác nhận</button>
+              </div>
+            </div>
+          ) : (
+            <div style={{ maxWidth: "1200px", width: "100%", margin: "0 auto", padding: "2rem 0" }}>
+              <h3 style={{ margin: "0 0 2rem 0", fontSize: "2rem", textAlign: "center", color: "#00b4d8" }}>Danh sách Câu hỏi & Đáp án</h3>
+              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+                <thead>
+                  <tr>
+                    <th style={{ borderBottom: "2px solid rgba(255,255,255,0.2)", padding: "16px 12px", fontSize: "1.3rem", width: "70%", color: "#fff" }}>Câu hỏi</th>
+                    <th style={{ borderBottom: "2px solid rgba(255,255,255,0.2)", padding: "16px 12px", fontSize: "1.3rem", width: "30%", color: "#fff" }}>Đáp án</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {matcherPool.map((item, idx) => (
+                    <tr key={idx} style={{ background: idx % 2 === 0 ? "rgba(255,255,255,0.02)" : "transparent" }}>
+                      <td style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", padding: "16px 12px", fontSize: "1.1rem", lineHeight: "1.6" }}>{item.text}</td>
+                      <td style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", padding: "16px 12px", fontSize: "1.1rem", color: "#00b4d8", fontWeight: "bold", whiteSpace: "nowrap" }}>{item.answer}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
