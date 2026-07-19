@@ -2,39 +2,38 @@ import { useEffect, useState } from "react";
 import $ from "jquery";
 import "../styles/flip/flip.css";
 import { Link, useNavigate } from "react-router-dom";
-import { flipImages } from "../data/flipImagesData";
 
 // Database câu hỏi cho Monopoly Matcher (Phân Loại Tài Phiệt)
 const matcherPool = [
   {
     text: "Các doanh nghiệp ký thỏa thuận cam kết giữ sản lượng và giá bán không thấp hơn mức quy định, nhưng độc lập về sản xuất và thương mại.",
-    answer: "Cartel",
-    ex: "Cartel là liên minh độc quyền sơ khai nhất, các thành viên chỉ cam kết về giá và sản lượng, vẫn độc lập sản xuất và tiêu thụ."
+    answer: "Các-ten",
+    ex: "Các-ten (Cartel) là liên minh độc quyền sơ khai nhất, các thành viên chỉ cam kết về giá và sản lượng, vẫn độc lập sản xuất và tiêu thụ."
   },
   {
     text: "Một công ty phân phối chung được thành lập để bán toàn bộ đường của 10 nhà máy mía đường lớn nhằm đè bẹp các xí nghiệp nhỏ lẻ.",
-    answer: "Syndicate",
-    ex: "Syndicate thống nhất đầu mối phân phối sản phẩm hoặc thu mua nguyên liệu, thành viên độc lập về sản xuất."
+    answer: "Xanh-đi-ca",
+    ex: "Xanh-đi-ca (Syndicate) thống nhất đầu mối phân phối sản phẩm hoặc thu mua nguyên liệu, thành viên độc lập về sản xuất."
   },
   {
     text: "Các xí nghiệp dệt thỏa thuận chỉ mua bông thông qua một văn phòng thu mua duy nhất để đè giá nguyên liệu đầu vào.",
-    answer: "Syndicate",
-    ex: "Syndicate tập trung đầu mối thương mại để ép giá nguyên liệu đầu vào có lợi nhất."
+    answer: "Xanh-đi-ca",
+    ex: "Xanh-đi-ca (Syndicate) tập trung đầu mối thương mại để ép giá nguyên liệu đầu vào có lợi nhất."
   },
   {
     text: "Các hãng xe hơi lớn hợp nhất toàn bộ nhà xưởng, nhân viên và bộ máy quản trị dưới sự chỉ đạo của một ban giám đốc chung, chủ cũ nhận cổ tức.",
-    answer: "Trust",
-    ex: "Trust sáp nhập hoàn toàn sản xuất, lưu thông và quản trị thành một ban quản trị chung."
+    answer: "Tờ-rớt",
+    ex: "Tờ-rớt (Trust) sáp nhập hoàn toàn sản xuất, lưu thông và quản trị thành một ban quản trị chung."
   },
   {
     text: "Liên minh độc quyền đa ngành khổng lồ kết hợp hàng chục xí nghiệp công nghiệp và ngân hàng lớn làm trung tâm điều phối vốn.",
-    answer: "Consortium",
-    ex: "Consortium (hoặc Concern) liên kết đa ngành từ sản xuất, thương mại đến tài chính ngân hàng."
+    answer: "Công-soóc-xi-om",
+    ex: "Công-soóc-xi-om (Consortium) liên kết đa ngành từ sản xuất, thương mại đến tài chính ngân hàng."
   },
   {
     text: "Một tập đoàn tài phiệt kiểm soát từ mỏ dầu, nhà máy lọc dầu, mạng lưới đường ống, trạm xăng, xí nghiệp bảo hiểm đến ngân hàng đầu tư.",
-    answer: "Consortium",
-    ex: "Consortium kết hợp sản xuất công nghiệp dọc-ngang và tư bản tài chính ngân hàng làm hạt nhân."
+    answer: "Công-soóc-xi-om",
+    ex: "Công-soóc-xi-om (Consortium) kết hợp sản xuất công nghiệp dọc-ngang và tư bản tài chính ngân hàng làm hạt nhân."
   },
   {
     text: "Chính phủ trực tiếp đầu tư ngân sách để nắm giữ độc quyền ngành Điện lực, Đường sắt và Sản xuất vũ khí quốc phòng.",
@@ -43,7 +42,7 @@ const matcherPool = [
   },
   {
     text: "Ngân hàng lớn bắt tay với các tập đoàn công nghiệp chế tạo máy bay để cùng đầu tư sản xuất và xuất khẩu tư bản ra nước ngoài.",
-    answer: "Consortium",
+    answer: "Công-soóc-xi-om",
     ex: "Sự thâm nhập lẫn nhau giữa độc quyền ngân hàng và độc quyền công nghiệp tạo thành tài phiệt tài chính."
   },
   {
@@ -53,13 +52,13 @@ const matcherPool = [
   },
   {
     text: "Các công ty dầu mỏ phân chia khu vực tiêu thụ miền Nam và miền Bắc để độc chiếm thị trường mà không xâm phạm lãnh thổ của nhau.",
-    answer: "Cartel",
-    ex: "Phân chia thị trường tiêu thụ là một dạng thỏa hiệp thị phần điển hình của Cartel."
+    answer: "Các-ten",
+    ex: "Phân chia thị trường tiêu thụ là một dạng thỏa hiệp thị phần điển hình của Các-ten."
   },
   {
     text: "Các công ty dược phẩm lớn sáp nhập toàn bộ văn phòng nghiên cứu phát triển và hệ thống kinh doanh dưới một ban chỉ đạo chung.",
-    answer: "Trust",
-    ex: "Việc sáp nhập hoàn toàn cả nghiên cứu, sản xuất, tiêu thụ dưới ban quản trị chung là đặc thù của Trust."
+    answer: "Tờ-rớt",
+    ex: "Việc sáp nhập hoàn toàn cả nghiên cứu, sản xuất, tiêu thụ dưới ban quản trị chung là đặc thù của Tờ-rớt (Trust)."
   },
   {
     text: "Nhà nước ban hành các đạo luật chống độc quyền độc chiếm, áp đặt trần giá bán điện hoặc điều tiết hoạt động của các tập đoàn tư nhân khổng lồ.",
@@ -69,10 +68,10 @@ const matcherPool = [
 ];
 
 const categoryMap = {
-  "Cartel": "cartel",
-  "Syndicate": "syndicate",
-  "Trust": "trust",
-  "Consortium": "consortium",
+  "Các-ten": "cartel",
+  "Xanh-đi-ca": "syndicate",
+  "Tờ-rớt": "trust",
+  "Công-soóc-xi-om": "consortium",
   "Độc quyền Nhà nước": "state-monopoly"
 };
 
@@ -88,6 +87,7 @@ export default function FlipCardPage() {
   const [matcherQuestions, setMatcherQuestions] = useState([]);
   const [matcherCurrentIndex, setMatcherCurrentIndex] = useState(0);
   const [matcherFeedback, setMatcherFeedback] = useState(null);
+  const [fallingWords, setFallingWords] = useState([]);
   const [matcherHighScore, setMatcherHighScore] = useState(() => {
     return parseInt(localStorage.getItem("matcher_highscore")) || 0;
   });
@@ -438,7 +438,7 @@ export default function FlipCardPage() {
     };
   }, [activeTab]);
 
-  // --- MONOPOLY MATCHER GAME LOGIC ---
+  // --- MONOPOLY MATCHER GAME TIMER ---
   useEffect(() => {
     let interval = null;
     if (activeTab === "matcher" && matcherState === "playing") {
@@ -458,6 +458,13 @@ export default function FlipCardPage() {
     };
   }, [activeTab, matcherState]);
 
+  // --- MONOPOLY MATCHER SPAWN TRIGGERS ---
+  useEffect(() => {
+    if (activeTab === "matcher" && matcherState === "playing" && matcherQuestions.length > 0) {
+      spawnFallingWords();
+    }
+  }, [matcherCurrentIndex, matcherState, matcherQuestions]);
+
   const startMatcherGame = () => {
     const shuffled = [...matcherPool].sort(() => Math.random() - 0.5);
     setMatcherQuestions(shuffled);
@@ -468,8 +475,32 @@ export default function FlipCardPage() {
     setMatcherState("playing");
   };
 
+  const spawnFallingWords = () => {
+    const categories = ["Các-ten", "Xanh-đi-ca", "Tờ-rớt", "Công-soóc-xi-om", "Độc quyền Nhà nước"];
+    
+    // Shuffle channels to prevent words from falling in the same vertical column
+    const channels = [8, 26, 44, 62, 80].sort(() => Math.random() - 0.5);
+    
+    // Spawn delays to spread the falling elements over time
+    const delays = [0, 0.8, 1.6, 2.4, 3.2].sort(() => Math.random() - 0.5);
+    
+    const words = categories.map((cat, index) => {
+      const duration = 5.0 + Math.random() * 1.5; // Random fall duration (5s - 6.5s)
+      return {
+        id: `${cat}-${Date.now()}-${index}`,
+        text: cat,
+        x: channels[index],
+        delay: delays[index],
+        duration: duration
+      };
+    });
+    
+    setFallingWords(words);
+  };
+
   const endMatcherGame = (finalScore = null) => {
     setMatcherState("ended");
+    setFallingWords([]);
     const scoreToSave = finalScore !== null ? finalScore : matcherScore;
 
     if (scoreToSave > matcherHighScore) {
@@ -485,11 +516,11 @@ export default function FlipCardPage() {
     localStorage.setItem("matcher_history", JSON.stringify(newHistory));
   };
 
-  const handleAnswer = (category) => {
+  const handleWordClick = (word) => {
     if (matcherFeedback) return;
 
     const currentQuestion = matcherQuestions[matcherCurrentIndex];
-    const isCorrect = currentQuestion.answer === category;
+    const isCorrect = word.text === currentQuestion.answer;
 
     let newScore = matcherScore;
     if (isCorrect) {
@@ -497,17 +528,40 @@ export default function FlipCardPage() {
       setMatcherScore(newScore);
       setMatcherFeedback({
         type: "success",
-        message: "Đúng rồi! +10 điểm 🎉",
+        message: "Chính xác! +10 điểm 🎉",
         explanation: currentQuestion.ex
       });
+      setFallingWords([]); // Clear remaining falling words immediately
     } else {
       newScore = Math.max(0, newScore - 5);
       setMatcherScore(newScore);
       setMatcherFeedback({
         type: "error",
-        message: `Sai rồi! -5 điểm (Đáp án đúng: ${currentQuestion.answer}) ❌`,
-        explanation: currentQuestion.ex
+        message: `Sai rồi! -5 điểm (Bạn chọn: ${word.text}) ❌`,
+        explanation: `Đáp án đúng là: ${currentQuestion.answer}. ${currentQuestion.ex}`
       });
+      // Remove only this wrong word bubble
+      setFallingWords((prev) => prev.filter((w) => w.id !== word.id));
+    }
+  };
+
+  const handleWordAnimationEnd = (word) => {
+    if (matcherFeedback) return; // Ignore if feedback is already showing
+
+    const currentQuestion = matcherQuestions[matcherCurrentIndex];
+    if (word.text === currentQuestion.answer) {
+      // Missed the correct answer!
+      const newScore = Math.max(0, matcherScore - 5);
+      setMatcherScore(newScore);
+      setMatcherFeedback({
+        type: "error",
+        message: "Bạn đã bỏ lỡ đáp án đúng! -5 điểm ⚠️",
+        explanation: `Đáp án đúng là: ${currentQuestion.answer}. ${currentQuestion.ex}`
+      });
+      setFallingWords([]); // Clear words immediately
+    } else {
+      // If a wrong answer bubble reaches the bottom, just filter it out
+      setFallingWords((prev) => prev.filter((w) => w.id !== word.id));
     }
   };
 
@@ -524,6 +578,7 @@ export default function FlipCardPage() {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setMatcherState("intro");
+    setFallingWords([]);
   };
 
   return (
@@ -721,15 +776,15 @@ export default function FlipCardPage() {
             </div>
           )}
 
-          {/* GAME CARDS */}
+          {/* GAME CONTENT CONTAINER */}
           {matcherState === "intro" && (
             <div className="matcher-card">
               <div className="matcher-card-glow"></div>
               <span className="matcher-question-counter">Minigame</span>
               <h2 className="matcher-title-large">PHÂN LOẠI TÀI PHIỆT</h2>
               <p className="matcher-intro-copy">
-                Các định nghĩa hoặc ví dụ thực tế liên quan đến các mô hình độc quyền của <strong>Chương 4 (Triết học Mác - Lênin)</strong> sẽ xuất hiện.
-                Nhiệm vụ của bạn là chọn đúng hình thức độc quyền tương ứng trước khi hết thời gian!
+                Các định nghĩa hoặc ví dụ thực tế liên quan đến các mô hình độc quyền của <strong>Chương 4 (Triết học Mác - Lênin)</strong> sẽ xuất hiện ở phía dưới.
+                Nhiệm vụ của bạn là click chọn đúng đáp án tương ứng đang rơi từ trên xuống trước khi hết thời gian!
               </p>
               <button
                 type="button"
@@ -741,56 +796,81 @@ export default function FlipCardPage() {
             </div>
           )}
 
-          {matcherState === "playing" && matcherQuestions.length > 0 && (
-            <div className="matcher-card">
-              <div className="matcher-card-glow"></div>
-              <span className="matcher-question-counter">
-                Câu hỏi {matcherCurrentIndex + 1} / {matcherQuestions.length}
-              </span>
-              
-              <p className="matcher-question-text">
-                "{matcherQuestions[matcherCurrentIndex].text}"
-              </p>
+          {matcherState === "playing" && (
+            <>
+              {/* FALLING ZONE (TOP/MIDDLE) */}
+              <div className="matcher-falling-zone">
+                <div className="matcher-channel-line" style={{ left: "15%" }}></div>
+                <div className="matcher-channel-line" style={{ left: "33%" }}></div>
+                <div className="matcher-channel-line" style={{ left: "51%" }}></div>
+                <div className="matcher-channel-line" style={{ left: "69%" }}></div>
+                <div className="matcher-channel-line" style={{ left: "87%" }}></div>
 
-              {/* BUCKET CATEGORY BUTTONS */}
-              <div className="matcher-buckets">
-                {Object.keys(categoryMap).map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    className={`matcher-bucket-btn ${categoryMap[cat]}`}
-                    onClick={() => handleAnswer(cat)}
-                    disabled={!!matcherFeedback}
+                {/* SPAWN FALLING BUBBLES */}
+                {fallingWords.map((word) => (
+                  <div
+                    key={word.id}
+                    className={`falling-word-bubble ${categoryMap[word.text]}`}
+                    style={{
+                      left: `${word.x}%`,
+                      animationDelay: `${word.delay}s`,
+                      animationDuration: `${word.duration}s`,
+                      animationPlayState: matcherFeedback ? "paused" : "running"
+                    }}
+                    onClick={() => handleWordClick(word)}
+                    onAnimationEnd={() => handleWordAnimationEnd(word)}
                   >
-                    <span>{cat}</span>
-                  </button>
+                    <span className="bubble-glow-dot"></span>
+                    {word.text}
+                  </div>
                 ))}
+
+                {/* FEEDBACK OVERLAY */}
+                {matcherFeedback && (
+                  <div className={`matcher-feedback-overlay ${matcherFeedback.type}`}>
+                    <h3 className="matcher-feedback-title">
+                      {matcherFeedback.type === "success" ? (
+                        <>
+                          <i className="bi bi-check-circle-fill me-2"></i>
+                          {matcherFeedback.message}
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                          {matcherFeedback.message}
+                        </>
+                      )}
+                    </h3>
+                    <p className="matcher-feedback-explanation">
+                      {matcherFeedback.explanation}
+                    </p>
+                    <button
+                      type="button"
+                      className="matcher-next-btn"
+                      onClick={handleNextQuestion}
+                    >
+                      Tiếp tục
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* FEEDBACK OVERLAY */}
-              {matcherFeedback && (
-                <div className={`matcher-feedback-overlay ${matcherFeedback.type}`}>
-                  <h3 className="matcher-feedback-title">
-                    {matcherFeedback.type === "success" ? (
-                      <i className="bi bi-check-circle-fill"></i>
-                    ) : (
-                      <i className="bi bi-exclamation-triangle-fill"></i>
-                    )}
-                    {matcherFeedback.message}
-                  </h3>
-                  <p className="matcher-feedback-explanation">
-                    {matcherFeedback.explanation}
+              {/* QUESTION CARD (BOTTOM) */}
+              {matcherQuestions.length > 0 && (
+                <div className="matcher-question-card-bottom">
+                  <span className="matcher-question-counter">
+                    Câu hỏi {matcherCurrentIndex + 1} / {matcherQuestions.length}
+                  </span>
+                  <p className="matcher-question-text">
+                    "{matcherQuestions[matcherCurrentIndex].text}"
                   </p>
-                  <button
-                    type="button"
-                    className="matcher-next-btn"
-                    onClick={handleNextQuestion}
-                  >
-                    Tiếp tục
-                  </button>
+                  <div className="matcher-question-help">
+                    <i className="bi bi-arrow-down-short animate-bounce"></i>
+                    Nhấp chọn đáp án đúng đang rơi phía trên!
+                  </div>
                 </div>
               )}
-            </div>
+            </>
           )}
 
           {matcherState === "ended" && (
