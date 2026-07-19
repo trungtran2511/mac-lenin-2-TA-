@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "my_mln_learning2_TuanAnh",
+  "project_id": "c2929ca0-59ed-4bb2-bc42-526ff370b48a"
+}

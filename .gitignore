@@ -30,3 +30,8 @@ dist-ssr
 
 # Vercel local metadata
 .vercel
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
