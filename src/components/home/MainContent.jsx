@@ -14,31 +14,24 @@ const thinkingImage =
 const FEATURES = [
   {
     title: "Quiz nhanh",
-    desc: "Trả lời từng câu ngắn, xem giải thích ngay và biết mình đang vướng ở chủ đề nào.",
+    desc: "Trả lời từng câu hỏi trắc nghiệm Chương 4, xem giải thích chi tiết ngay lập tức để củng cố kiến thức.",
     image: quizImage,
     link: "/quiz",
     cta: "Làm quiz",
   },
   {
     title: "Memory Lab",
-    desc: "Lật cặp hình, ghép ý tương ứng và luyện ghi nhớ khái niệm bằng nhịp chơi nhanh.",
+    desc: "Lật thẻ ghi nhớ, ghép cặp thuật ngữ và luyện phản xạ ghi nhớ khái niệm cốt lõi bằng nhịp chơi nhanh.",
     image: flashcardImage,
     link: "/flip",
     cta: "Chơi ngay",
   },
   {
-    title: "Lá số vui cùng AI",
-    desc: "Một góc giải trí nhẹ: lập lá số, đọc luận giải tham khảo và xem AI diễn đạt theo cách dễ hiểu.",
+    title: "Cố vấn Cạnh tranh & Kinh tế",
+    desc: "Nhập hồ sơ cá nhân và nhận tư vấn chiến lược cạnh tranh, định vị sức lao động dưới góc nhìn Chương 4 cùng AI.",
     image: thinkingImage,
     link: "/tuvi",
-    cta: "Thử lá số",
-  },
-  {
-    title: "Triết Profile",
-    desc: "Trả lời 12 tình huống để xem tư duy kinh tế của bạn nghiêng về cạnh tranh tự do, độc quyền tư nhân hay độc quyền nhà nước.",
-    image: philosophyImage,
-    link: "/philosophy-profile",
-    cta: "Check vibe",
+    cta: "Nhận cố vấn",
   },
 ];
 

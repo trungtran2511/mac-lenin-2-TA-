@@ -8,7 +8,6 @@ import QuizPrintPage from "./pages/QuizPrintPage";
 import FlipCardPage from "./pages/FlipCardPage";
 import TuviPage from "./pages/Tuvipage";
 import Courses from "./pages/Courses";
-import PhilosophyProfilePage from "./pages/PhilosophyProfilePage";
 
 function App() {
   return (
@@ -33,8 +32,6 @@ function App() {
         <Route path="/tuvi" element={<TuviPage />} />
 
         <Route path="/courses" element={<Courses />} />
-
-        <Route path="/philosophy-profile" element={<PhilosophyProfilePage />} />
       </Routes>
     </BrowserRouter>
   );
